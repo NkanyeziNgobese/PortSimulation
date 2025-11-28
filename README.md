@@ -1,0 +1,74 @@
+# Durban Port Congestion & Efficiency Optimization (SimPy)
+
+This project builds a discrete‑event simulation of container flows through the Port of Durban using SimPy and Python. It models how import containers move from ship to yard, through scanning, onto trucks, and out the gate, and then compares a **baseline** operation against an **improved dwell‑time scenario**.
+
+The core logic currently lives in the Jupyter notebook `durban_port_simulation.ipynb`.
+
+## What the model simulates
+
+- **Resources**
+  - Ship‑to‑shore cranes (STS)
+  - Yard storage capacity (TEU slots)
+  - Customs scanners (SARS)
+  - Truck loading bays
+  - Gate‑out lanes
+- **Container lifecycle**
+  1. Arrival to the system (discharge from ship)
+  2. Crane offloading
+  3. Yard entry and dwell
+  4. Scanning
+  5. Truck loading
+  6. Gate‑out
+- **Scenarios**
+  - Baseline: current dwell‑time pattern (e.g. 3/5/7 days in yard).
+  - Improved: shorter yard dwell (e.g. 2/3/4 days) to test operational improvements.
+
+For each container, the simulation records timestamps at each stage and computes KPIs such as total time in port, yard dwell, and queueing times at scanner, loader, and gate.
+
+## Project structure
+
+- `durban_port_simulation.ipynb` – main notebook with:
+  - Global parameters (number of cranes, capacities, service times, simulation horizon).
+  - SimPy processes (`container_process`, arrival generator, improved scenario).
+  - Metrics collection and conversion to pandas DataFrames.
+  - Plots of wait‑time distributions and baseline vs improved comparisons.
+  - Numerical summary of percentage improvements.
+- `data/` – placeholder for any input data you may add later.
+- `simulation/` – placeholder Python modules (`resources.py`, `processes.py`, `run.py`) if you later refactor the notebook into scripts.
+- `figures/` – auto‑generated plots per run, under timestamped folders like `run_YYYYMMDD_HHMMSS/`.
+
+## Requirements
+
+Install the main dependencies (for example with `pip`):
+
+```bash
+pip install simpy pandas matplotlib seaborn
+```
+
+You will also need Jupyter or VS Code / another IDE capable of running `.ipynb` notebooks.
+
+## How to run the simulation
+
+1. Open `durban_port_simulation.ipynb` in Jupyter or your IDE.
+2. Run the cells in order:
+   - Parameter and metric definitions.
+   - Baseline simulation (environment setup and `env.run(...)`).
+   - Convert `METRICS` to a DataFrame and generate baseline plots.
+   - Improved dwell‑time simulation (`env2`, `METRICS_IMPROVED`).
+   - Convert improved metrics and run comparison plots + numerical summary.
+3. Generated figures are saved under `figures/run_.../` and also displayed inline.
+
+## Interpreting the outputs
+
+- **DataFrames (`df`, `df_improved`)**
+  - `total_time` – total minutes a container spends in the system.
+  - `yard_dwell` – minutes in yard.
+  - `scan_wait`, `loading_wait`, `gate_wait` – queueing time before each resource.
+- **Plots**
+  - Single‑scenario histograms (wait‑time distributions for scan, loader, gate).
+  - KDE curves comparing baseline vs improved dwell for key KPIs.
+- **Numerical summary**
+  - Percentage reduction in mean total time, yard dwell, and waits between baseline and improved runs.
+
+These results support analysis of which operational changes (e.g. reduced yard dwell) most effectively reduce congestion and improve port efficiency.
+
