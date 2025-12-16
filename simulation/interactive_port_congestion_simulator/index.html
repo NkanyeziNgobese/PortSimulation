@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="floating-actions">
+    <button id="baselineBtn">Run Baseline</button>
+    <button id="improvedBtn">Run Improved Dwell</button>
+    <button id="customBtn" class="primary">Run Custom</button>
+  </div>
   <div class="page">
     <header class="topbar">
       <div>
@@ -16,9 +21,6 @@
         <p class="lede">Discrete-event simulation of container flow (ship → crane → yard dwell → scanning → truck loading → gate-out). Parameters mirror the research notebook; use this to explore bottlenecks and congestion dynamics.</p>
       </div>
       <div class="actions">
-        <button id="baselineBtn">Run Baseline</button>
-        <button id="improvedBtn">Run Improved Dwell</button>
-        <button id="customBtn" class="primary">Run Custom</button>
         <button id="resetBtn" class="ghost">Reset</button>
       </div>
     </header>
