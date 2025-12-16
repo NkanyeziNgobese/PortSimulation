@@ -1,0 +1,155 @@
+<!-- README: Open this file directly in a browser (no server needed). Use the controls to run the baseline or improved dwell scenarios, or tweak parameters and click “Run Custom”. Metrics, bottleneck, queue charts, and wait-time histograms update after each run. -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Durban Port Congestion Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Port Congestion & Efficiency Optimization – Durban Container Terminal</p>
+        <h1>Browser Simulator</h1>
+        <p class="lede">Discrete-event simulation of container flow (ship → crane → yard dwell → scanning → truck loading → gate-out). Parameters mirror the research notebook; use this to explore bottlenecks and congestion dynamics.</p>
+      </div>
+      <div class="actions">
+        <button id="baselineBtn">Run Baseline</button>
+        <button id="improvedBtn">Run Improved Dwell</button>
+        <button id="customBtn" class="primary">Run Custom</button>
+        <button id="resetBtn" class="ghost">Reset</button>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Operating Parameters</h2>
+        <div class="hint">Defaults match the SimPy baseline (7-day horizon, mean arrival every 5 minutes).</div>
+      </div>
+      <div class="controls-grid">
+        <label class="control">
+          <span>Number of cranes</span>
+          <input type="number" id="numCranes" min="1" step="1">
+        </label>
+        <label class="control">
+          <span>Crane productivity (moves/hour)</span>
+          <input type="number" id="craneMph" min="1" step="1">
+        </label>
+        <label class="control">
+          <span>Yard dwell policy</span>
+          <select id="dwellPolicy">
+            <option value="baseline">Baseline (3/5/7 days)</option>
+            <option value="improved">Improved (2/3/4 days)</option>
+          </select>
+        </label>
+        <label class="control">
+          <span>Number of scanners</span>
+          <input type="number" id="numScanners" min="1" step="1">
+        </label>
+        <label class="control">
+          <span>Scanner service time (minutes)</span>
+          <input type="number" id="scanTime" min="1" step="1">
+        </label>
+        <label class="control">
+          <span>Loading bays</span>
+          <input type="number" id="numLoaders" min="1" step="1">
+        </label>
+        <label class="control">
+          <span>Loading time min / mode / max (minutes)</span>
+          <div class="triple">
+            <input type="number" id="loadMin" min="1" step="1">
+            <input type="number" id="loadMode" min="1" step="1">
+            <input type="number" id="loadMax" min="1" step="1">
+          </div>
+        </label>
+        <label class="control">
+          <span>Gate lanes</span>
+          <input type="number" id="numGates" min="1" step="1">
+        </label>
+        <label class="control">
+          <span>Gate time min / mode / max (minutes)</span>
+          <div class="triple">
+            <input type="number" id="gateMin" min="1" step="1">
+            <input type="number" id="gateMode" min="1" step="1">
+            <input type="number" id="gateMax" min="1" step="1">
+          </div>
+        </label>
+        <label class="control">
+          <span>Container arrival rate (per hour)</span>
+          <input type="number" id="arrivalRate" min="1" step="0.5">
+        </label>
+        <label class="control">
+          <span>Simulation horizon (days)</span>
+          <input type="number" id="simDays" min="1" step="1">
+        </label>
+      </div>
+    </section>
+
+    <section class="panel metrics-panel">
+      <div class="panel-header">
+        <h2>Current Run Metrics</h2>
+        <div class="hint" id="runLabel">—</div>
+      </div>
+      <div class="metrics-grid" id="metricsGrid"></div>
+      <div class="bottleneck" id="bottleneckBox">Bottleneck: —</div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Queue Lengths Over Time</h2>
+        <div class="hint">FIFO queues at scanners, loading bays, and gate lanes.</div>
+      </div>
+      <canvas id="queueChart" width="1200" height="360"></canvas>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Wait-Time Distributions</h2>
+        <div class="hint">Histograms for scan, loading, and gate waits (minutes).</div>
+      </div>
+      <div class="hist-grid">
+        <canvas id="scanHist" width="380" height="260"></canvas>
+        <canvas id="loadHist" width="380" height="260"></canvas>
+        <canvas id="gateHist" width="380" height="260"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Scenario Comparison</h2>
+        <div class="hint">Baseline vs Improved dwell. Run both to populate the table.</div>
+      </div>
+      <table class="comparison-table" id="comparisonTable">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Baseline</th>
+            <th>Improved Dwell</th>
+            <th>Δ (improved vs baseline)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Flow Preview</h2>
+        <div class="hint">Not to scale—just a visual cue of stage sequencing.</div>
+      </div>
+      <div class="flowline" id="flowline">
+        <div class="stage">Ship</div>
+        <div class="stage">Cranes</div>
+        <div class="stage">Yard</div>
+        <div class="stage">Scanning</div>
+        <div class="stage">Loading</div>
+        <div class="stage">Gate-Out</div>
+        <div class="dot" id="flowDot"></div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
