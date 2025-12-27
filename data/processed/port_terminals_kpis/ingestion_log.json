@@ -1,0 +1,65 @@
+{
+  "run_timestamp": "2025-12-27 14:35:39",
+  "base_dir": "data\\reports\\annual_results",
+  "output_dir": "data\\processed\\port_terminals_kpis",
+  "years": {
+    "2020": {
+      "year": 2020,
+      "match_type": "exact",
+      "pdf_path": "data\\reports\\annual_results\\2020\\annual\\Port Terminals 2020.pdf",
+      "rows_extracted": 47,
+      "start_page": 5,
+      "end_page": 6,
+      "warnings": []
+    },
+    "2021": {
+      "year": 2021,
+      "match_type": "exact",
+      "pdf_path": "data\\reports\\annual_results\\2021\\annual\\Port Terminals 2021.pdf",
+      "rows_extracted": 44,
+      "start_page": 5,
+      "end_page": 6,
+      "warnings": []
+    },
+    "2022": {
+      "year": 2022,
+      "match_type": "exact",
+      "pdf_path": "data\\reports\\annual_results\\2022\\annual\\Port Terminals 2022.pdf",
+      "rows_extracted": 43,
+      "start_page": 5,
+      "end_page": 6,
+      "warnings": []
+    },
+    "2023": {
+      "year": 2023,
+      "match_type": "fallback_single_terminals",
+      "pdf_path": "data\\reports\\annual_results\\2023\\annual\\Transnet Port Terminals Report.pdf",
+      "rows_extracted": 42,
+      "start_page": 6,
+      "end_page": 7,
+      "warnings": []
+    },
+    "2024": {
+      "year": 2024,
+      "match_type": "fallback_year_match",
+      "pdf_path": "data\\reports\\annual_results\\2024\\annual\\Transnet Port Terminals Report 2024.pdf",
+      "rows_extracted": 36,
+      "start_page": 4,
+      "end_page": 4,
+      "warnings": []
+    },
+    "2025": {
+      "year": 2025,
+      "match_type": "fallback_year_match",
+      "pdf_path": "data\\reports\\annual_results\\2025\\annual\\Transnet Port Terminals Report 2025 _Interactive.pdf",
+      "rows_extracted": 24,
+      "start_page": 6,
+      "end_page": 7,
+      "warnings": []
+    }
+  },
+  "rows_total": 236,
+  "warnings": [
+    "Parquet write skipped: Unable to find a usable engine; tried using: 'pyarrow', 'fastparquet'.\nA suitable version of pyarrow or fastparquet is required for parquet support.\nTrying to import the above resulted in these errors:\n - Missing optional dependency 'pyarrow'. pyarrow is required for parquet support. Use pip or conda to install pyarrow.\n - Missing optional dependency 'fastparquet'. fastparquet is required for parquet support. Use pip or conda to install fastparquet."
+  ]
+}

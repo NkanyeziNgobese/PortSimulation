@@ -1,7 +1,9 @@
 # Unit Volume Data Dictionary
+
 Generated: 2025-12-27 13:14:43
 
 ## Columns
+
 - report_month: Report month derived from filename (YYYY-MM).
 - source_file: Original Excel filename.
 - date: Date field from report.
@@ -25,6 +27,7 @@ Generated: 2025-12-27 13:14:43
 - reqs_power: Requires power flag from report.
 
 ## Notes
+
 - Each row represents one unit when no explicit volume column is present.
 - report_month is parsed from the filename using configured regex patterns.
 - terminal is derived from facility_code if a terminal field is not present.
