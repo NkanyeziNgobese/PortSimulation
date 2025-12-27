@@ -1,0 +1,98 @@
+input_dir: data/reports/unit_volume_reports
+output_dir: data/processed/unit_volume
+
+filename_month_regexes:
+  - pattern: "(?P<month_name>jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\\s*(?P<year>20\\d{2})"
+  - pattern: "(?P<year>20\\d{2})[^0-9]?(?P<month_num>0?[1-9]|1[0-2])"
+  - pattern: "(?P<year>20\\d{2})(?P<month_num>0[1-9]|1[0-2])"
+
+month_name_map:
+  jan: 1
+  january: 1
+  feb: 2
+  february: 2
+  mar: 3
+  march: 3
+  apr: 4
+  april: 4
+  may: 5
+  jun: 6
+  june: 6
+  jul: 7
+  july: 7
+  aug: 8
+  august: 8
+  sep: 9
+  september: 9
+  oct: 10
+  october: 10
+  nov: 11
+  november: 11
+  dec: 12
+  december: 12
+
+sheet_name_patterns:
+  - shipping_stats
+  - unit volume
+  - volume
+
+header_detection:
+  max_scan_rows: 30
+  min_match_count: 3
+
+column_mappings:
+  date: ["date", "report date"]
+  facility_code: ["facility code", "facility", "facilitycode"]
+  terminal: ["terminal", "pier"]
+  category: ["category", "move type", "move", "direction"]
+  pol_country_code: ["pol unloc country code", "pol country code", "pol country"]
+  pol: ["pol"]
+  pod_country_code: ["pod unloc country code", "pod country code", "pod country"]
+  pod: ["pod"]
+  pod1: ["pod1"]
+  pol1: ["pol1"]
+  pod2: ["pod2"]
+  dest: ["dest", "destination"]
+  iso_code: ["iso_code", "iso code", "iso"]
+  type_length: ["type length", "type_length", "length", "size"]
+  freight_kind: ["freight kind", "freight_kind"]
+  reefer_type: ["reefer type", "reefer_type"]
+  reqs_power: ["reqs power", "requires power", "power reqs", "req power"]
+  volume: ["volume", "teu", "teus", "units", "count"]
+
+category_value_map:
+  import: IMPORT
+  imports: IMPORT
+  exp: EXPORT
+  export: EXPORT
+  exports: EXPORT
+  trans: TRANSSHIPMENT
+  transhipment: TRANSSHIPMENT
+  transshipment: TRANSSHIPMENT
+
+unit_rules:
+  default_unit: containers
+  volume_column_units:
+    teu: TEU
+    teus: TEU
+    volume: containers
+    units: containers
+    count: containers
+
+required_fields:
+  - date
+  - category
+
+output:
+  long_filename: unit_volume_long.csv
+  wide_filename: unit_volume_wide.csv
+  parquet_filename: unit_volume.parquet
+
+wide_output:
+  enabled: true
+  group_by: ["terminal", "category", "unit"]
+  value_column: "volume"
+
+options:
+  keep_unmapped_columns: false
+  treat_missing_volume_as_units: true
