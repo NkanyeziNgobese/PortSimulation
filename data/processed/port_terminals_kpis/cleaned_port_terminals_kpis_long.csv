@@ -1,0 +1,33 @@
+report_year,kpi_section,kpi_name,terminal_or_scope,unit,source_pdf,extraction_confidence,actual_value,actual_label,sim_parameter
+2020,Operational efficiency and productivity,Container moves per ship working hour,DCT Pier 1,moves per hour,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,1.0,41.0,2020 Actual,SHIP_WORK_RATE
+2020,Operational efficiency and productivity,Container moves per ship working hour,DCT Pier 2,moves per hour,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,1.0,46.0,2020 Actual,SHIP_WORK_RATE
+2020,Operational efficiency and productivity,Moves per gross crane hour,DCT Pier 1,moves per hour,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,1.0,24.0,2020 Actual,CRANE_MOVES_PER_HOUR
+2020,Operational efficiency and productivity,Moves per gross crane hour,DCT Pier 2,moves per hour,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,1.0,18.0,2020 Actual,CRANE_MOVES_PER_HOUR
+2020,Operational efficiency and productivity,Train turnaround time,DCT Pier 1,hours,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,1.0,2.7,2020 Actual,TRAIN_TURNAROUND_HOUR
+2020,Operational efficiency and productivity,Train turnaround time,DCT Pier 2,hours,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,1.0,2.3,2020 Actual,TRAIN_TURNAROUND_HOUR
+2020,Operational efficiency and productivity,Truck turnaround time,DCT Pier 1,minutes,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,1.0,49.0,2020 Actual,TRUCK_TURNAROUND_MIN
+2020,Operational efficiency and productivity,Truck turnaround time,DCT Pier 2,minutes,data\reports\annual_results\2020\annual\Port Terminals 2020.pdf,0.8,65102.0,2020 Actual,TRUCK_TURNAROUND_MIN
+2021,Operational efficiency and productivity,Container moves per ship working hour,DCT Pier 1,moves per hour,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,1.0,47.0,2019 Actual,SHIP_WORK_RATE
+2021,Operational efficiency and productivity,Container moves per ship working hour,DCT Pier 2,moves per hour,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,1.0,54.0,2019 Actual,SHIP_WORK_RATE
+2021,Operational efficiency and productivity,Moves per gross crane hour,DCT Pier 1,moves per hour,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,1.0,24.0,2019 Actual,CRANE_MOVES_PER_HOUR
+2021,Operational efficiency and productivity,Moves per gross crane hour,DCT Pier 2,moves per hour,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,1.0,21.0,2019 Actual,CRANE_MOVES_PER_HOUR
+2021,Operational efficiency and productivity,Train turnaround time,DCT Pier 1,hours,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,1.0,2.3,2019 Actual,TRAIN_TURNAROUND_HOUR
+2021,Operational efficiency and productivity,Train turnaround time,DCT Pier 2,hours,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,1.0,2.0,2019 Actual,TRAIN_TURNAROUND_HOUR
+2021,Operational efficiency and productivity,Truck turnaround time,DCT Pier 1,minutes,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,1.0,41.0,2019 Actual,TRUCK_TURNAROUND_MIN
+2021,Operational efficiency and productivity,Truck turnaround time,DCT Pier 2,minutes,data\reports\annual_results\2021\annual\Port Terminals 2021.pdf,0.8,25.0,2019 Actual,TRUCK_TURNAROUND_MIN
+2022,Operational efficiency and productivity,Container moves per ship working hour,DCT Pier 1,moves per hour,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,41.0,2020 Actual,SHIP_WORK_RATE
+2022,Operational efficiency and productivity,Container moves per ship working hour,DCT Pier 2,moves per hour,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,46.0,2020 Actual,SHIP_WORK_RATE
+2022,Operational efficiency and productivity,Moves per gross crane hour,DCT Pier 1,moves per hour,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,24.0,2020 Actual,CRANE_MOVES_PER_HOUR
+2022,Operational efficiency and productivity,Moves per gross crane hour,DCT Pier 2,moves per hour,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,18.0,2020 Actual,CRANE_MOVES_PER_HOUR
+2022,Operational efficiency and productivity,Train turnaround time,DCT Pier 1,hours,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,2.7,2020 Actual,TRAIN_TURNAROUND_HOUR
+2022,Operational efficiency and productivity,Train turnaround time,DCT Pier 2,hours,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,2.3,2020 Actual,TRAIN_TURNAROUND_HOUR
+2022,Operational efficiency and productivity,Truck turnaround time,DCT Pier 1,minutes,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,49.0,2020 Actual,TRUCK_TURNAROUND_MIN
+2022,Operational efficiency and productivity,Truck turnaround time,DCT Pier 2,minutes,data\reports\annual_results\2022\annual\Port Terminals 2022.pdf,1.0,102.0,2020 Actual,TRUCK_TURNAROUND_MIN
+2023,Operational performance,Moves per gross crane hour,DCT Pier 1,moves per hour,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,1.0,24.0,2019 Actual,CRANE_MOVES_PER_HOUR
+2023,Operational performance,Moves per gross crane hour,DCT Pier 2,moves per hour,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,1.0,21.0,2019 Actual,CRANE_MOVES_PER_HOUR
+2023,Operational performance,Train Turnaround time (c),DCT Pier 1,hours,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,1.0,2.3,2019 Actual,TRAIN_TURNAROUND_HOUR
+2023,Operational performance,Train Turnaround time (c),DCT Pier 2,hours,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,1.0,2.0,2019 Actual,TRAIN_TURNAROUND_HOUR
+2023,Operational performance,Truck turnaround time,DCT Pier 1,minutes,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,1.0,41.0,2019 Actual,TRUCK_TURNAROUND_MIN
+2023,Operational performance,Truck turnaround time,DCT Pier 2,minutes,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,0.8,72.0,2019 Actual,TRUCK_TURNAROUND_MIN
+2023,Operational performance,hour,DCT Pier 1,moves per hour,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,1.0,47.0,2019 Actual,TRAIN_TURNAROUND_HOUR
+2023,Operational performance,hour,DCT Pier 2,moves per hour,data\reports\annual_results\2023\annual\Transnet Port Terminals Report.pdf,1.0,54.0,2019 Actual,TRAIN_TURNAROUND_HOUR
