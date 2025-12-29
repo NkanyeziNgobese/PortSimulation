@@ -1,16 +1,18 @@
-# Vessel/Berth Layer (V1) Notes
+# Vessel/Berth Layer (Phase 2) Notes
 
 ## What changed
-- Added a vessel/berth layer (V1) that can drive container arrivals in batches.
-- Added vessel metrics (arrival, berth start/end, anchorage wait, pier, moves per call, TEU estimate).
-- Added vessel plots (anchorage wait distribution, berth utilization).
-- Added a sanity-check cell for vessels/week, total TEU, and utilization.
+- Added gang assignment (cranes per vessel) with pier-specific distributions.
+- Added crane pools per pier and recorded crane-pool empty time.
+- Switched to rate-based discharge (GCH * cranes * efficiency) and post-discharge container entry.
+- Added vessel metrics (cranes requested/assigned, crane wait, efficiency used, shift-loss minutes).
+- Added vessel plots (anchorage wait, cranes assigned by pier, berth utilization).
+- Expanded sanity checks (SWH vs reference, crane pool empty %, anchorage wait).
 
 ## How to run
 1) Default mode (unchanged): direct container arrivals  
-   - Leave `USE_VESSEL_ARRIVALS = False` in the global parameters cell.
-2) Vessel-driven mode (new):  
-   - Set `USE_VESSEL_ARRIVALS = True` in the global parameters cell.
+   - Leave `USE_VESSEL_LAYER = False` in the global parameters cell.
+2) Vessel-driven mode (Phase 2):  
+   - Set `USE_VESSEL_LAYER = True` in the global parameters cell.
    - Optional toggles: `ENABLE_ANCHORAGE_QUEUE`, `INCLUDE_MARINE_DELAYS`.
 
 ## Parameters and provenance
@@ -22,6 +24,8 @@ Parameters are centralized in `vessel_params.py` with explicit tags:
 - `TEU_PER_MOVE` (TEU per container move) until unit-volume TEU data is cleaned.
 - `ENABLE_ANCHORAGE_QUEUE` / `INCLUDE_MARINE_DELAYS` toggles.
 - `VESSEL_IMPORT_SHARE` (used to scale discharge batch vs total moves per call).
+- Pier efficiency factors and crane pool sizes if not in the source notes.
+- Shift-loss aggregation approach (hook loss applied as added downtime).
 
 ## Next data needed
 - Exact line references for all SOURCE-ANCHORED parameters in `/mnt/data/pasted.txt`.
