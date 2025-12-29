@@ -1,7 +1,6 @@
 {
-  "run_timestamp": "2025-12-27 13:06:13",
+  "run_timestamp": "2025-12-29 09:55:02",
   "input_dir": "data\\reports\\unit_volume_reports",
-  "output_dir": "data\\processed\\unit_volume",
   "files_total": 22,
   "files_processed": 22,
   "files_skipped": 0,
@@ -30,62 +29,45 @@
     "2025-11"
   ],
   "errors": [],
-  "warnings": [
-    "Parquet write skipped: Unable to find a usable engine; tried using: 'pyarrow', 'fastparquet'.\nA suitable version of pyarrow or fastparquet is required for parquet support.\nTrying to import the above resulted in these errors:\n - Missing optional dependency 'pyarrow'. pyarrow is required for parquet support. Use pip or conda to install pyarrow.\n - Missing optional dependency 'fastparquet'. fastparquet is required for parquet support. Use pip or conda to install fastparquet."
-  ],
+  "warnings": [],
   "file_logs": [
     {
       "file": "unit volume april 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume april 2024.xlsx",
       "report_month": "2024-04",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-04-01",
+      "report_period_end": "2024-04-30",
+      "rows": 174596,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202404",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202404",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -93,54 +75,39 @@
       "file": "unit volume April 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume April 2025.xlsx",
       "report_month": "2025-04",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-04-01",
+      "report_period_end": "2025-04-30",
+      "rows": 183039,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202504",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202504",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -148,54 +115,39 @@
       "file": "unit volume august 2024.xls",
       "path": "data\\reports\\unit_volume_reports\\unit volume august 2024.xls",
       "report_month": "2024-08",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-08-01",
+      "report_period_end": "2024-08-31",
+      "rows": 65535,
+      "unique_facility_codes": 3,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202408",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202408",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -203,54 +155,39 @@
       "file": "unit volume august 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume august 2025.xlsx",
       "report_month": "2025-08",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-08-01",
+      "report_period_end": "2025-08-31",
+      "rows": 189781,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202508",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202508",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -258,54 +195,39 @@
       "file": "unit volume december 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume december 2024.xlsx",
       "report_month": "2024-12",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-12-01",
+      "report_period_end": "2024-12-31",
+      "rows": 183868,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_2024_12",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_2024_12",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -313,54 +235,39 @@
       "file": "unit volume february 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume february 2024.xlsx",
       "report_month": "2024-02",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-02-01",
+      "report_period_end": "2024-02-29",
+      "rows": 170004,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202402",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202402",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -368,54 +275,39 @@
       "file": "unit volume february 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume february 2025.xlsx",
       "report_month": "2025-02",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-02-01",
+      "report_period_end": "2025-02-28",
+      "rows": 159134,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_2025_02",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_2025_02",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -423,54 +315,39 @@
       "file": "unit volume january 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume january 2024.xlsx",
       "report_month": "2024-01",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-01-01",
+      "report_period_end": "2024-01-31",
+      "rows": 166112,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202401",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202401",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -478,54 +355,39 @@
       "file": "unit volume january 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume january 2025.xlsx",
       "report_month": "2025-01",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-01-01",
+      "report_period_end": "2025-01-31",
+      "rows": 170386,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_2025_01",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_2025_01",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -533,54 +395,39 @@
       "file": "unit volume july 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume july 2024.xlsx",
       "report_month": "2024-07",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-07-01",
+      "report_period_end": "2024-07-31",
+      "rows": 189694,
+      "unique_facility_codes": 9,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202407",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202407",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -588,54 +435,39 @@
       "file": "unit volume july 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume july 2025.xlsx",
       "report_month": "2025-07",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-07-01",
+      "report_period_end": "2025-07-31",
+      "rows": 217689,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202507",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202507",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -643,54 +475,39 @@
       "file": "unit volume june 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume june 2024.xlsx",
       "report_month": "2024-06",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-06-01",
+      "report_period_end": "2024-06-30",
+      "rows": 188512,
+      "unique_facility_codes": 9,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202406",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202406",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -698,62 +515,39 @@
       "file": "unit volume June 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume June 2025.xlsx",
       "report_month": "2025-06",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-06-01",
+      "report_period_end": "2025-06-30",
+      "rows": 196831,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202506",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202506",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
-        },
-        {
-          "sheet": "Sheet1",
-          "status": "scanned",
-          "header_row": null,
-          "match_count": 0,
-          "matched_fields": [],
-          "score": 0
+          ]
         }
       ]
     },
@@ -761,54 +555,39 @@
       "file": "unit volume march 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume march 2024.xlsx",
       "report_month": "2024-03",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-03-01",
+      "report_period_end": "2024-03-31",
+      "rows": 178228,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202403",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202403",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -816,54 +595,39 @@
       "file": "unit volume march 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume march 2025.xlsx",
       "report_month": "2025-03",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-03-01",
+      "report_period_end": "2025-03-31",
+      "rows": 172492,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202303",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202303",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -871,54 +635,39 @@
       "file": "unit volume may 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume may 2024.xlsx",
       "report_month": "2024-05",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-05-01",
+      "report_period_end": "2024-05-31",
+      "rows": 195516,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202405",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202405",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -926,54 +675,39 @@
       "file": "unit volume may 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume may 2025.xlsx",
       "report_month": "2025-05",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-05-01",
+      "report_period_end": "2025-05-31",
+      "rows": 177716,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "Sheet1",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "Sheet1",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 16
+          ]
         }
       ]
     },
@@ -981,54 +715,39 @@
       "file": "unit volume november 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume november 2025.xlsx",
       "report_month": "2025-11",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-11-01",
+      "report_period_end": "2025-11-30",
+      "rows": 165584,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202511",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202511",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -1036,54 +755,39 @@
       "file": "unit volume october 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume october 2024.xlsx",
       "report_month": "2024-10",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-10-01",
+      "report_period_end": "2024-10-31",
+      "rows": 184706,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202410",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202410",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -1091,54 +795,39 @@
       "file": "unit volume october 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume october 2025.xlsx",
       "report_month": "2025-10",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-10-01",
+      "report_period_end": "2025-10-31",
+      "rows": 210949,
+      "unique_facility_codes": 9,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202510",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202510",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -1146,54 +835,39 @@
       "file": "unit volume september 2024.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume september 2024.xlsx",
       "report_month": "2024-09",
+      "report_month_source": "date_raw",
+      "report_period_start": "2024-09-01",
+      "report_period_end": "2024-09-30",
+      "rows": 189357,
+      "unique_facility_codes": 9,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202409",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202409",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     },
@@ -1201,54 +875,39 @@
       "file": "unit volume september 2025.xlsx",
       "path": "data\\reports\\unit_volume_reports\\unit volume september 2025.xlsx",
       "report_month": "2025-09",
+      "report_month_source": "date_raw",
+      "report_period_start": "2025-09-01",
+      "report_period_end": "2025-09-30",
+      "rows": 197726,
+      "unique_facility_codes": 8,
+      "missing_critical_columns": [],
       "selected_sheet": "shipping_stats_202509",
       "header_row": 0,
       "matched_fields": [
         "category",
-        "date",
-        "dest",
         "facility_code",
-        "freight_kind",
-        "iso_code",
         "pod",
-        "pod1",
-        "pod2",
-        "pod_country_code",
         "pol",
-        "pol1",
-        "pol_country_code",
-        "reefer_type",
-        "reqs_power",
         "type_length"
       ],
       "status": "processed",
-      "warnings": [],
+      "warnings": [
+        "No numeric volume column found; defaulted volume=1 per row."
+      ],
       "error": null,
       "sheet_logs": [
         {
           "sheet": "shipping_stats_202509",
           "status": "scanned",
           "header_row": 0,
-          "match_count": 16,
+          "match_count": 5,
           "matched_fields": [
             "category",
-            "date",
-            "dest",
             "facility_code",
-            "freight_kind",
-            "iso_code",
             "pod",
-            "pod1",
-            "pod2",
-            "pod_country_code",
             "pol",
-            "pol1",
-            "pol_country_code",
-            "reefer_type",
-            "reqs_power",
             "type_length"
-          ],
-          "score": 17
+          ]
         }
       ]
     }
