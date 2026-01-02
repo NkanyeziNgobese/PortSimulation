@@ -67,6 +67,14 @@ Outputs are written to data/processed/port_terminals_kpis/.
 
 ## How to run the simulation
 
+## Quickstart
+
+Minimal path to get a baseline run and plots:
+1. Open durban_port_simulation.ipynb.
+2. Keep USE_VESSEL_LAYER = False for the default direct-arrivals mode.
+3. Run all cells top-to-bottom.
+4. Check figures/ for the latest run_YYYYMMDD_HHMMSS/ output folder.
+
 1. Open durban_port_simulation.ipynb.
 2. Run cells top-to-bottom.
 3. Key toggles live in the Global Parameters cell:
@@ -102,6 +110,19 @@ Common KPI columns:
 - scan_wait, loading_wait, gate_wait
 - yard_equipment_wait
 - pre_pickup_wait, customs_hold_delay, rebook_delay
+
+## Data availability (expected outputs)
+
+File | Producer | Notes
+--- | --- | ---
+data/processed/unit_volume/unit_volume_long.csv | scripts/ingest/ingest_unit_volume_reports.py | Used for truck arrival profile
+data/processed/unit_volume/unit_volume_wide.csv | scripts/ingest/ingest_unit_volume_reports.py | Optional monthly totals
+data/processed/unit_volume/unit_volume.parquet | scripts/ingest/ingest_unit_volume_reports.py | Optional parquet output
+data/processed/unit_volume/data_dictionary.md | scripts/ingest/ingest_unit_volume_reports.py | Column dictionary
+data/processed/unit_volume/ingestion_log.json | scripts/ingest/ingest_unit_volume_reports.py | File-by-file ingest log
+data/processed/port_terminals_kpis/port_terminals_kpis_long.csv | scripts/ingest/ingest_port_terminals_kpis.py | KPI long format
+data/processed/port_terminals_kpis/cleaned_port_terminals_kpis_long.csv | manual/cleaning | Optional cleaned KPI output
+data/processed/port_terminals_kpis/ingestion_log.json | scripts/ingest/ingest_port_terminals_kpis.py | KPI ingest log
 
 ## Modeling notes and assumptions
 
