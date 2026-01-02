@@ -1,3 +1,7 @@
+# Big report exports
 data/reports/
+
+# Big CSVs (adjust paths if under /data)
 unit_volume_long.csv
 unit_volume_wide.csv
+unit_volume_ingested.csv
