@@ -195,7 +195,7 @@
 
     const totals = collectMetric(records, "total_time");
     if (!totals.length) {
-      container.innerHTML = "<div class="hint">No total_time values available.</div>";
+      container.innerHTML = '<div class="hint">No total_time values available.</div>';
       return;
     }
 
@@ -243,7 +243,7 @@
     const totalValues = collectMetric(records, "total_time");
     const totalMean = mean(totalValues);
     if (!totalMean) {
-      container.innerHTML = "<div class="hint">No total_time available for bottleneck ranking.</div>";
+      container.innerHTML = '<div class="hint">No total_time available for bottleneck ranking.</div>';
       return;
     }
 
@@ -278,7 +278,7 @@
     tableBody.innerHTML = "";
 
     if (!state.metadata || !state.metadata.metrics) {
-      tableBody.innerHTML = "<tr><td colspan="3" class="hint">No metadata loaded.</td></tr>";
+      tableBody.innerHTML = '<tr><td colspan="3" class="hint">No metadata loaded.</td></tr>';
       return;
     }
 
