@@ -35,6 +35,19 @@ and should not be treated as an endorsement or operational system.
 - simulation/interactive_port_congestion_simulator/ - optional UI prototype.
 - figures/ - saved plots per run under run_YYYYMMDD_HHMMSS/.
 
+## Interactive simulator (visuals)
+
+The interactive dashboard lives in `simulation/interactive_port_congestion_simulator/`.
+Use it to explore baseline vs improved performance after exporting web outputs.
+Detailed run instructions are in `simulation/interactive_port_congestion_simulator/README.md`.
+
+![Interactive header and data status](simulation/interactive_port_congestion_simulator/images/interactive_head.png)
+![Scenario KPI summary](simulation/interactive_port_congestion_simulator/images/interactive_scenario_kpi.png)
+![Distribution charts](simulation/interactive_port_congestion_simulator/images/interactive_distribution.png)
+![Long-tail diagnostics](simulation/interactive_port_congestion_simulator/images/interactive_long_tail_diagnostics.png)
+![Bottleneck ranking](simulation/interactive_port_congestion_simulator/images/interactive_bottleneck_ranking.png)
+![Sources and assumptions](simulation/interactive_port_congestion_simulator/images/interactive_sources.png)
+
 ## Dependencies
 
 Minimum for the notebook:
