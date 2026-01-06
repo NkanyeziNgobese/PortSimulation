@@ -1,5 +1,8 @@
 ﻿# Durban Port Congestion & Efficiency Optimization (SimPy)
 
+![Durban Port Congestion & Efficiency Optimization](docs/images/durban_port_congestion_and_efficiency_optimization.png)
+
+
 This repo models container congestion at the Port of Durban using a SimPy
 discrete-event simulation. The main notebook compares baseline operations
 against improved dwell strategies and can optionally run a vessel/berth layer
