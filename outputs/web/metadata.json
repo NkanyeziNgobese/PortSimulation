@@ -1,0 +1,346 @@
+{
+  "exported_at": "2026-01-06T10:00:49+00:00",
+  "scenarios": [
+    {
+      "key": "baseline",
+      "name": "Baseline",
+      "run_timestamp": "2026-01-06T10:00:49+00:00"
+    },
+    {
+      "key": "improved",
+      "name": "Improved Dwell",
+      "run_timestamp": "2026-01-06T10:00:49+00:00"
+    }
+  ],
+  "metrics": {
+    "arrival_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "container_id": {
+      "unit": "id",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "crane_end": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "crane_start": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "dwell_terminal": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "dwell_terminal_days": {
+      "unit": "days",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "exit_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "flow_type": {
+      "unit": "category",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "gate_in_end": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "gate_in_queue_enter": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "gate_in_start": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "gate_out_exit_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "gate_queue_enter": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "gate_start": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "gate_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "loader_queue_len_at_pickup": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "loading_end": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "loading_queue_enter": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "loading_start": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "loading_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "occupancy_at_yard_to_scan": {
+      "unit": "ratio",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "occupancy_at_yard_to_truck": {
+      "unit": "ratio",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "pickup_request_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "pickup_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "pre_pickup_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "pre_pickup_wait_hours": {
+      "unit": "hours",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "ready_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "ready_to_pickup_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "scan_end": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "scan_queue_enter": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "scan_start": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "scan_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "scanner_queue_len_at_pickup": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "teu_size": {
+      "unit": "TEU",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "total_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_dwell": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_entry_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_equipment_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_exit_time": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_scan_end": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_scan_queue_enter": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_scan_start": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_scan_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_truck_end": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_truck_queue_enter": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_truck_start": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    },
+    "yard_to_truck_wait": {
+      "unit": "minutes",
+      "source_anchor": {
+        "type": "ASSUMPTION",
+        "reference": "durban_port_simulation.ipynb: Simulation Logic"
+      }
+    }
+  }
+}
