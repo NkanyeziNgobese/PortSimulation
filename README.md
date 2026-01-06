@@ -63,7 +63,7 @@ Optional data pipeline dependencies:
 python -m pip install openpyxl xlrd pyyaml pyarrow pdfplumber
 ```
 
-## Data pipelines (optional but recommended)
+## Data pipelines
 
 ### Unit volume ingestion (Excel)
 Converts monthly unit-volume Excel reports into a unified dataset used by the
