@@ -176,6 +176,7 @@ Running the CLI demo writes:
 Reviewer-facing docs live under `docs/`:
 - `docs/architecture.md`
 - `docs/assumptions.md`
+- `docs/limitations.md`
 - `docs/sources.md`
 - `docs/failure_modes.md`
 - `docs/results_summary.md`
@@ -191,6 +192,7 @@ Reviewer-facing docs live under `docs/`:
 - Customs hold and rebooking logic are defined in helper functions but are not wired into the main flow.
 - Some vessel-layer parameters were previously tied to a missing source file; they remain assumptions.
 - The CLI demo does not cover vessel/berth logic or TAS; those remain notebook-only for now.
+See `docs/limitations.md` for the full list.
 
 ## Data availability (expected outputs)
 

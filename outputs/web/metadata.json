@@ -1,15 +1,15 @@
 {
-  "exported_at": "2026-01-06T10:00:49+00:00",
+  "exported_at": "2026-01-07T16:28:49+00:00",
   "scenarios": [
     {
       "key": "baseline",
       "name": "Baseline",
-      "run_timestamp": "2026-01-06T10:00:49+00:00"
+      "run_timestamp": "2026-01-07T16:28:49+00:00"
     },
     {
       "key": "improved",
       "name": "Improved Dwell",
-      "run_timestamp": "2026-01-06T10:00:49+00:00"
+      "run_timestamp": "2026-01-07T16:28:49+00:00"
     }
   ],
   "metrics": {
@@ -342,5 +342,10 @@
         "reference": "durban_port_simulation.ipynb: Simulation Logic"
       }
     }
-  }
+  },
+  "limitations": [
+    "Notebook-driven export; web JSON is produced by executing notebook cells.",
+    "Customs hold and rebooking helpers exist but are not wired into the main flow.",
+    "Vessel-layer parameters include assumptions because a source file is missing."
+  ]
 }

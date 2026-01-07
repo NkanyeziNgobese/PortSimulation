@@ -11,7 +11,3 @@ This repo includes a limited set of source material and processed data outputs.
 ## Not included in the repo
 - The raw reports referenced by ingestion scripts live under `$backup/data_reports/` in this workspace and are not part of the repo.
 - The source file referenced in older notes (`/mnt/data/pasted.txt`) is missing; parameters linked to it are treated as assumptions.
-
-## Notes
-- Do not add external citations or claims unless the underlying source file is present in the repo.
-- If you provide missing sources, update parameter tags and this document accordingly.

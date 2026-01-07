@@ -19,6 +19,12 @@ REQUIRED_METRICS = [
     "gate_wait",
 ]
 
+LIMITATIONS = [
+    "Notebook-driven export; web JSON is produced by executing notebook cells.",
+    "Customs hold and rebooking helpers exist but are not wired into the main flow.",
+    "Vessel-layer parameters include assumptions because a source file is missing.",
+]
+
 
 def _should_skip_cell(source):
     """Skip notebook cells that only generate plots or visuals."""
@@ -117,6 +123,7 @@ def _build_metadata(columns, run_timestamp):
             {"key": "improved", "name": "Improved Dwell", "run_timestamp": run_timestamp},
         ],
         "metrics": metrics,
+        "limitations": LIMITATIONS,
     }
 
 
