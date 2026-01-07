@@ -1,4 +1,19 @@
 from .model import run_simulation
-from .scenarios import ScenarioConfig, get_scenario
+from .overrides import apply_overrides
+from .scenarios import (
+    SCENARIO_KEYS,
+    ScenarioConfig,
+    get_scenario,
+    scenario_from_dict,
+    scenario_to_dict,
+)
 
-__all__ = ["ScenarioConfig", "get_scenario", "run_simulation"]
+__all__ = [
+    "SCENARIO_KEYS",
+    "ScenarioConfig",
+    "apply_overrides",
+    "get_scenario",
+    "run_simulation",
+    "scenario_from_dict",
+    "scenario_to_dict",
+]

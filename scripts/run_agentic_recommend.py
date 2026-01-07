@@ -62,8 +62,8 @@ def _write_summary(out_dir: Path, diagnostics: dict, decision: dict) -> None:
         action = actions[0]
         lines.append(
             "- Recommendation: "
-            f"`{action.get('parameter')}` {action.get('delta')} "
-            f"(bounds {action.get('min_delta')}..{action.get('max_delta')})"
+            f"`{action.get('param')}` {action.get('delta')} "
+            f"(bounds {action.get('min')}..{action.get('max')})"
         )
     else:
         lines.append("- Recommendation: collect more metrics or run demo outputs.")

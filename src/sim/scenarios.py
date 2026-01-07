@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from typing import List, Tuple
 
 
@@ -50,6 +50,17 @@ class ScenarioConfig:
     @property
     def crane_time_mins(self) -> float:
         return 60.0 / max(self.crane_moves_per_hour, 1e-6)
+
+
+SCENARIO_KEYS = tuple(ScenarioConfig.__dataclass_fields__.keys())
+
+
+def scenario_to_dict(config: ScenarioConfig) -> dict:
+    return asdict(config)
+
+
+def scenario_from_dict(data: dict) -> ScenarioConfig:
+    return ScenarioConfig(**data)
 
 
 def _demo_base() -> ScenarioConfig:
@@ -129,7 +140,10 @@ def get_scenario(name: str, demo: bool) -> ScenarioConfig:
         base,
         name="improved",
         description=(
-            "Demo improved scenario (currently identical to baseline; improvements are planned "
-            "but not wired in the CLI demo)."
+            "Demo improved scenario with small capacity increases for comparison."
         ),
+        num_scanners=base.num_scanners + 1,
+        num_loaders=base.num_loaders + 1,
+        yard_equipment_capacity=base.yard_equipment_capacity + 1,
+        num_gate_out=base.num_gate_out + 1,
     )

@@ -16,7 +16,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.sim import get_scenario, run_simulation
+from src.sim import apply_overrides, get_scenario, run_simulation, scenario_from_dict, scenario_to_dict
 
 
 def parse_args() -> argparse.Namespace:
@@ -25,6 +25,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--demo", action="store_true", help="Run the lightweight demo simulation.")
     parser.add_argument("--out", required=True, help="Output directory path.")
+    parser.add_argument("--config", help="Optional JSON base config path.")
+    parser.add_argument("--override", help="Optional JSON overrides path.")
     return parser.parse_args()
 
 
@@ -52,19 +54,32 @@ def plot_histogram(df: pd.DataFrame, column: str, title: str, xlabel: str, out_p
     return True
 
 
-def main() -> int:
-    args = parse_args()
-    if not args.demo:
-        print("Non-demo CLI runs are not implemented. Use --demo or the notebook.")
-        return 2
+def _load_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
 
-    out_dir = Path(args.out)
+
+def _build_config_dict(args: argparse.Namespace) -> dict:
+    if args.config:
+        base_config = _load_json(Path(args.config))
+    else:
+        base_config = scenario_to_dict(get_scenario(args.scenario, demo=True))
+
+    if args.override:
+        overrides = _load_json(Path(args.override))
+        base_config = apply_overrides(base_config, overrides)
+
+    return base_config
+
+
+def run_demo(config_dict: dict, seed: int, out_dir: Path) -> dict:
+    config = scenario_from_dict(config_dict)
+
     plots_dir = out_dir / "plots"
     out_dir.mkdir(parents=True, exist_ok=True)
     plots_dir.mkdir(parents=True, exist_ok=True)
 
     log_path = out_dir / "run.log"
-    logger = logging.getLogger("demo_run")
+    logger = logging.getLogger(f"demo_run_{out_dir.name}")
     logger.setLevel(logging.INFO)
     logger.handlers.clear()
     handler = logging.FileHandler(log_path, mode="w", encoding="utf-8")
@@ -72,11 +87,10 @@ def main() -> int:
     logger.addHandler(handler)
     logger.addHandler(logging.StreamHandler(sys.stdout))
 
-    config = get_scenario(args.scenario, demo=True)
-    logger.info("Starting demo run: scenario=%s seed=%s", config.name, args.seed)
+    logger.info("Starting demo run: scenario=%s seed=%s", config.name, seed)
     logger.info("Demo description: %s", config.description)
 
-    df = run_simulation(config, seed=args.seed)
+    df = run_simulation(config, seed=seed)
     logger.info("Completed simulation with %s container rows.", len(df))
 
     kpis_path = out_dir / "kpis.csv"
@@ -122,9 +136,9 @@ def main() -> int:
             logger.warning("Skipped yard equipment wait plot (missing data).")
 
     metadata = {
-        "scenario": config.name,
+        "scenario_name": config.name,
         "scenario_description": config.description,
-        "seed": args.seed,
+        "seed": seed,
         "demo": True,
         "timestamp_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "git_commit": get_git_commit(ROOT),
@@ -153,6 +167,7 @@ def main() -> int:
                 "gate_out": config.num_gate_out,
             },
         },
+        "config_used": config_dict,
     }
 
     metadata_path = out_dir / "metadata.json"
@@ -160,6 +175,17 @@ def main() -> int:
     logger.info("Wrote metadata to %s", metadata_path)
 
     logger.info("Demo run complete.")
+    return metadata
+
+
+def main() -> int:
+    args = parse_args()
+    if not args.demo:
+        print("Non-demo CLI runs are not implemented. Use --demo or the notebook.")
+        return 2
+
+    config_dict = _build_config_dict(args)
+    run_demo(config_dict, seed=args.seed, out_dir=Path(args.out))
     return 0
 
 

@@ -3,13 +3,13 @@
   "scenario_description": "Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.",
   "seed": 123,
   "demo": true,
-  "timestamp_utc": "2026-01-07T17:46:50+00:00",
+  "timestamp_utc": "2026-01-07T17:47:06+00:00",
   "git_commit": "b2279431fb55bd86d28cd0e49f0d45b093f1d55d",
-  "row_count": 77,
+  "row_count": 66,
   "outputs": {
-    "kpis_csv": "C:/Users/nkany/OneDrive/Desktop/Projects/Port Congestion and Efficiency Optimization - Durban Port/PortSimulation/outputs/test_demo_baseline/kpis.csv",
-    "plots_dir": "C:/Users/nkany/OneDrive/Desktop/Projects/Port Congestion and Efficiency Optimization - Durban Port/PortSimulation/outputs/test_demo_baseline/plots",
-    "run_log": "C:/Users/nkany/OneDrive/Desktop/Projects/Port Congestion and Efficiency Optimization - Durban Port/PortSimulation/outputs/test_demo_baseline/run.log"
+    "kpis_csv": "outputs/agentic_demo/after/kpis.csv",
+    "plots_dir": "outputs/agentic_demo/after/plots",
+    "run_log": "outputs/agentic_demo/after/run.log"
   },
   "config_summary": {
     "sim_time_mins": 480,
@@ -25,8 +25,8 @@
       "yard_capacity": 250,
       "yard_equipment": 5,
       "scanners": 1,
-      "loaders": 2,
-      "gate_in": 1,
+      "loaders": 3,
+      "gate_in": 2,
       "gate_out": 1
     }
   },
@@ -45,8 +45,8 @@
     "yard_capacity": 250,
     "yard_equipment_capacity": 5,
     "num_scanners": 1,
-    "num_loaders": 2,
-    "num_gate_in": 1,
+    "num_loaders": 3,
+    "num_gate_in": 2,
     "num_gate_out": 1,
     "crane_moves_per_hour": 30.0,
     "scan_time_mins": 5.0,

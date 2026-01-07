@@ -44,27 +44,25 @@ def _safe_p95(series: pd.Series) -> Optional[float]:
     return float(values.quantile(0.95))
 
 
-def _load_dataframe(input_path: Path) -> pd.DataFrame:
-    suffix = input_path.suffix.lower()
-    if suffix == ".json":
-        payload = json.loads(input_path.read_text(encoding="utf-8"))
-        records: List[dict] = []
-        columns: Optional[List[str]] = None
-        if isinstance(payload, dict):
-            records = payload.get("records") or payload.get("data") or []
-            columns = payload.get("columns")
-        elif isinstance(payload, list):
-            records = payload
-        else:
-            raise ValueError(f"Unsupported JSON structure in {input_path}")
-        df = pd.DataFrame(records)
-        if columns:
-            df = df.reindex(columns=columns)
-        return df
-    if suffix == ".csv":
-        return pd.read_csv(input_path)
-    raise ValueError(f"Unsupported input format: {input_path}")
+def load_kpis_csv(input_path: Path) -> pd.DataFrame:
+    return pd.read_csv(input_path)
 
+
+def load_web_json(input_path: Path) -> pd.DataFrame:
+    payload = json.loads(input_path.read_text(encoding="utf-8"))
+    records: List[dict] = []
+    columns: Optional[List[str]] = None
+    if isinstance(payload, dict):
+        records = payload.get("records") or payload.get("data") or []
+        columns = payload.get("columns")
+    elif isinstance(payload, list):
+        records = payload
+    else:
+        raise ValueError(f"Unsupported JSON structure in {input_path}")
+    df = pd.DataFrame(records)
+    if columns:
+        df = df.reindex(columns=columns)
+    return df
 
 def _coverage_ratio(df: pd.DataFrame, required_cols: Iterable[str]) -> float:
     required = list(required_cols)
@@ -74,10 +72,7 @@ def _coverage_ratio(df: pd.DataFrame, required_cols: Iterable[str]) -> float:
     return len(present) / len(required)
 
 
-def diagnose(input_path: str | Path) -> Dict[str, object]:
-    path = Path(input_path)
-    df = _load_dataframe(path)
-
+def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object]:
     row_count = int(len(df))
     required_cols = ["total_time"] + STAGE_CANDIDATES
     missing_required = [col for col in required_cols if col not in df.columns]
@@ -134,7 +129,7 @@ def diagnose(input_path: str | Path) -> Dict[str, object]:
 
     return {
         "schema_version": SCHEMA_VERSION,
-        "input_source": str(path),
+        "input_source": input_source,
         "row_count": row_count,
         "missing_columns": missing_columns,
         "summary_stats": {
@@ -145,3 +140,26 @@ def diagnose(input_path: str | Path) -> Dict[str, object]:
         "stage_rankings": stage_rankings,
         "confidence": confidence,
     }
+
+
+def diagnose_kpis_path(input_path: str | Path) -> Dict[str, object]:
+    path = Path(input_path)
+    df = load_kpis_csv(path)
+    return _diagnose_dataframe(df, str(path))
+
+
+def diagnose_dataframe(df: pd.DataFrame, input_source: str = "dataframe") -> Dict[str, object]:
+    return _diagnose_dataframe(df, input_source)
+
+
+def diagnose(input_value: str | Path | pd.DataFrame) -> Dict[str, object]:
+    if isinstance(input_value, pd.DataFrame):
+        return _diagnose_dataframe(input_value, "dataframe")
+    path = Path(input_value)
+    suffix = path.suffix.lower()
+    if suffix == ".csv":
+        return diagnose_kpis_path(path)
+    if suffix == ".json":
+        df = load_web_json(path)
+        return _diagnose_dataframe(df, str(path))
+    raise ValueError("Unsupported input format; use kpis.csv or web JSON.")

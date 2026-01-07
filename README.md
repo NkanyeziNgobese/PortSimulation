@@ -186,6 +186,25 @@ Outputs:
 If `outputs/web/baseline.json` is missing, point `--input` to a demo KPI file
 (e.g., `outputs/demo_baseline/kpis.csv`).
 
+## Agentic Option B (Demo): Auto-apply bounded interventions
+
+Run:
+```bash
+python scripts/run_agentic_apply_demo.py --seed 123 --max-actions 2 --out outputs/agentic_demo
+```
+
+Outputs:
+- `outputs/agentic_demo/baseline/metadata.json`
+- `outputs/agentic_demo/baseline/kpis.csv`
+- `outputs/agentic_demo/baseline/plots/`
+- `outputs/agentic_demo/decision.json`
+- `outputs/agentic_demo/after/metadata.json`
+- `outputs/agentic_demo/after/kpis.csv`
+- `outputs/agentic_demo/after/plots/`
+- `outputs/agentic_demo/comparison.json`
+- `outputs/agentic_demo/comparison.csv`
+- `outputs/agentic_demo/agentic_summary.md`
+
 ## Docs
 
 Reviewer-facing docs live under `docs/`:
