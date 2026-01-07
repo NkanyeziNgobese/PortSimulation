@@ -21,22 +21,51 @@ and should not be treated as an endorsement or operational system.
 - Truck Appointment System (TAS) module for truck arrivals and slotting.
 - Data ingestion scripts for unit volume Excel reports and KPI tables from PDFs.
 
+## Reviewer paths
+
+### 5-minute path
+1. Run the CLI demo: `python scripts/run_simulation.py --scenario baseline --seed 123 --demo --out outputs/demo_baseline`
+2. Open `outputs/demo_baseline/metadata.json` and `outputs/demo_baseline/kpis.csv`.
+3. Review `docs/architecture.md` for system flow and module map.
+
+### 30-minute path
+1. Run the CLI demo and inspect `outputs/demo_baseline/plots/`.
+2. Skim `durban_port_simulation.ipynb` sections: Introduction, Assumptions, Experiments, Results.
+3. Inspect `vessel_layer.py`, `truck_tas.py`, and `vessel_params.py` for model modules.
+4. Open the web dashboard (if exports exist) via
+   `python src/web_export/export_results_for_web.py` + `python -m http.server 8000`.
+
+## Quick demo (no Jupyter)
+
+```bash
+python scripts/run_simulation.py --scenario baseline --seed 123 --demo --out outputs/demo_baseline
+```
+
+Expected outputs:
+- `outputs/demo_baseline/metadata.json` (run metadata + seed)
+- `outputs/demo_baseline/kpis.csv` (container-level KPIs)
+- `outputs/demo_baseline/plots/` (at least 2 plots)
+- `outputs/demo_baseline/run.log` (run summary)
+
 ## Project structure
 
 - durban_port_simulation.ipynb - primary notebook (baseline + improved runs,
   metrics, plots, validation).
 - vessel_layer.py - vessel/berth + crane assignment layer (toggle-driven).
-- vessel_params.py - vessel-layer parameters with SOURCE-ANCHORED vs
-  ASSUMPTION tags.
+- vessel_params.py - vessel-layer parameters with assumption tags.
 - VESSEL_LAYER_NOTES.md - short notes on the vessel layer, toggles, and
   assumptions.
 - truck_tas.py - Truck Appointment System (TAS) arrivals + truck process.
+- scripts/run_simulation.py - deterministic CLI demo runner.
+- src/sim/ - lightweight simulation package used by the demo runner.
 - scripts/ingest/ingest_unit_volume_reports.py - Excel unit volume ingestion.
 - scripts/ingest/ingest_port_terminals_kpis.py - PDF KPI extraction pipeline.
 - data/processed/unit_volume/ - cleaned unit-volume outputs + dictionary/log.
 - data/processed/port_terminals_kpis/ - KPI extraction outputs + log.
 - simulation/interactive_port_congestion_simulator/ - optional UI prototype.
 - figures/ - saved plots per run under run_YYYYMMDD_HHMMSS/.
+- docs/ - reviewer-facing architecture, assumptions, and data usage notes.
+- requirements.txt - pinned environment for reproducibility.
 
 ## Interactive simulator (visuals)
 
@@ -51,17 +80,21 @@ Detailed run instructions are in `simulation/interactive_port_congestion_simulat
 ![Bottleneck ranking](simulation/interactive_port_congestion_simulator/images/interactive_bottleneck_ranking.png)
 ![Sources and assumptions](simulation/interactive_port_congestion_simulator/images/interactive_sources.png)
 
-## Dependencies
+## Reproducibility and installation
 
-Minimum for the notebook:
+Install pinned dependencies:
 ```bash
-python -m pip install simpy pandas numpy matplotlib seaborn
+python -m pip install -r requirements.txt
 ```
 
-Optional data pipeline dependencies:
+Optional PDF fallback (if you want Camelot extraction):
 ```bash
-python -m pip install openpyxl xlrd pyyaml pyarrow pdfplumber
+python -m pip install -r requirements-optional.txt
 ```
+
+Notes:
+- `PyYAML` is unpinned because it was not installed in the environment used to capture versions.
+- `camelot-py` is optional and kept in `requirements-optional.txt`.
 
 ## Data pipelines
 
@@ -83,30 +116,33 @@ Outputs are written to data/processed/port_terminals_kpis/.
 
 ## How to run the simulation
 
-## Quickstart
+### CLI demo (fast, no Jupyter)
+```bash
+python scripts/run_simulation.py --scenario baseline --seed 123 --demo --out outputs/demo_baseline
+```
 
+### Notebook (full model)
 Minimal path to get a baseline run and plots:
-1. Open durban_port_simulation.ipynb.
-2. Keep USE_VESSEL_LAYER = False for the default direct-arrivals mode.
+1. Open `durban_port_simulation.ipynb`.
+2. Keep `USE_VESSEL_LAYER = False` for the default direct-arrivals mode.
 3. Run all cells top-to-bottom.
-4. Check figures/ for the latest run_YYYYMMDD_HHMMSS/ output folder.
+4. Check `figures/` for the latest `run_YYYYMMDD_HHMMSS/` output folder.
 
-1. Open durban_port_simulation.ipynb.
-2. Run cells top-to-bottom.
-3. Key toggles live in the Global Parameters cell:
-   - USE_VESSEL_LAYER: switch between direct container arrivals and vessel-
-     driven batch arrivals.
-   - ENABLE_ANCHORAGE_QUEUE, INCLUDE_MARINE_DELAYS: vessel-layer options.
-   - P_IMPORT, P_EXPORT, P_TRANSSHIP: flow mix probabilities.
-   - Shift calendar parameters (e.g., SHIFT_LENGTH_MINS) affect crane/yard
-     downtime.
-4. Plots are saved under figures/run_.../ and displayed inline.
+Key toggles live in the Global Parameters cell:
+- `USE_VESSEL_LAYER`: switch between direct container arrivals and vessel-driven batch arrivals.
+- `ENABLE_ANCHORAGE_QUEUE`, `INCLUDE_MARINE_DELAYS`: vessel-layer options.
+- `P_IMPORT`, `P_EXPORT`, `P_TRANSSHIP`: flow mix probabilities.
+- Shift calendar parameters (e.g., `SHIFT_LENGTH_MINS`) affect crane/yard downtime.
 
 ### Baseline vs improved runs
 The notebook runs:
 - Baseline (current dwell + resources).
 - Improved dwell (alternative dwell assumptions + aligned shifts).
-Both produce DataFrames and comparison plots.
+
+Important: customs hold and rebooking logic are defined in helpers/notes but are
+not yet wired into the main container flow, so "improved" is currently a
+parameter-level comparison rather than a full behavioral change.
+Both runs produce DataFrames and comparison plots.
 
 ### TAS (Truck Appointment System)
 Run the Truck + TAS Simulation (Phase 2) section in the notebook to
@@ -125,7 +161,36 @@ Common KPI columns:
 - total_time, yard_dwell, dwell_terminal
 - scan_wait, loading_wait, gate_wait
 - yard_equipment_wait
-- pre_pickup_wait, customs_hold_delay, rebook_delay
+- pre_pickup_wait, ready_to_pickup_wait
+
+## Demo outputs (CLI)
+
+Running the CLI demo writes:
+- `outputs/demo_baseline/metadata.json`: run metadata including seed and config summary
+- `outputs/demo_baseline/kpis.csv`: container-level KPIs from the demo run
+- `outputs/demo_baseline/plots/`: at least two plots (total time + queue proxy)
+- `outputs/demo_baseline/run.log`: run summary and file paths
+
+## Docs
+
+Reviewer-facing docs live under `docs/`:
+- `docs/architecture.md`
+- `docs/assumptions.md`
+- `docs/sources.md`
+- `docs/failure_modes.md`
+- `docs/results_summary.md`
+- `docs/data_usage.md`
+
+## Trade-offs
+
+- The CLI demo uses scaled timings and synthetic arrivals for speed, so it is not a calibration run.
+- The notebook retains richer logic and plots but requires Jupyter and larger datasets.
+
+## Limitations and planned work
+
+- Customs hold and rebooking logic are defined in helper functions but are not wired into the main flow.
+- Some vessel-layer parameters were previously tied to a missing source file; they remain assumptions.
+- The CLI demo does not cover vessel/berth logic or TAS; those remain notebook-only for now.
 
 ## Data availability (expected outputs)
 
@@ -140,10 +205,13 @@ data/processed/port_terminals_kpis/port_terminals_kpis_long.csv | scripts/ingest
 data/processed/port_terminals_kpis/cleaned_port_terminals_kpis_long.csv | manual/cleaning | Optional cleaned KPI output
 data/processed/port_terminals_kpis/ingestion_log.json | scripts/ingest/ingest_port_terminals_kpis.py | KPI ingest log
 
+See `docs/data_usage.md` for the mapping between ingestion configs and raw data paths under `$backup/`.
+
 ## Modeling notes and assumptions
 
-- SOURCE-ANCHORED vs ASSUMPTION tags are called out in
-  durban_port_simulation.ipynb and vessel_params.py.
+- Assumption tags are called out in `durban_port_simulation.ipynb` and
+  `vessel_params.py`. Parameters that previously referenced a missing source
+  file are now marked as assumptions.
 - If unit-volume data is missing, the truck arrival profile falls back to a
   synthetic hourly shape (TRUCK_TEU_BASE_RATE).
 - Vessel layer uses a TEU-per-move conversion factor until the unit-volume data
@@ -157,3 +225,5 @@ data/processed/port_terminals_kpis/ingestion_log.json | scripts/ingest/ingest_po
 - If truck arrivals look flat, verify
   data/processed/unit_volume/unit_volume_long.csv exists and update
   TRUCK_ARRIVAL_DATA_PATH in the notebook.
+- If the CLI demo fails to write outputs, check the `--out` path is writable.
+- If module imports fail, install dependencies from `requirements.txt`.

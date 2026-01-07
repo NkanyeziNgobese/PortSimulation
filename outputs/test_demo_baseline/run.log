@@ -1,0 +1,8 @@
+2026-01-07 17:55:51,602 INFO Starting demo run: scenario=baseline seed=123
+2026-01-07 17:55:51,602 INFO Demo description: Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.
+2026-01-07 17:55:51,613 INFO Completed simulation with 77 container rows.
+2026-01-07 17:55:51,618 INFO Wrote KPIs to C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\kpis.csv
+2026-01-07 17:55:51,753 INFO Saved plot C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\plots\total_time_hist.png
+2026-01-07 17:55:51,851 INFO Saved plot C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\plots\scanner_queue_len_hist.png
+2026-01-07 17:55:51,960 INFO Wrote metadata to C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\metadata.json
+2026-01-07 17:55:51,961 INFO Demo run complete.

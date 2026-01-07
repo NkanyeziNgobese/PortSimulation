@@ -17,7 +17,7 @@
 
 ## Parameters and provenance
 Parameters are centralized in `vessel_params.py` with explicit tags:
-- SOURCE-ANCHORED: derived from `/mnt/data/pasted.txt` (line refs marked as TBD).
+- ASSUMPTION (source missing from repo): values that previously referenced a missing source file.
 - ASSUMPTION TO TUNE: placeholders until exact data is wired in.
 
 ## ASSUMPTION TO TUNE
@@ -28,6 +28,6 @@ Parameters are centralized in `vessel_params.py` with explicit tags:
 - Shift-loss aggregation approach (hook loss applied as added downtime).
 
 ## Next data needed
-- Exact line references for all SOURCE-ANCHORED parameters in `/mnt/data/pasted.txt`.
+- The missing source file or citations that justify berth, crane pool, and productivity parameters.
 - Annual TEU target for the sanity-check comparison.
 - Pier-specific moves-per-call or discharge share if available.

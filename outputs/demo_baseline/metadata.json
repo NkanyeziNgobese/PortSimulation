@@ -1,0 +1,33 @@
+{
+  "scenario": "baseline",
+  "scenario_description": "Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.",
+  "seed": 123,
+  "demo": true,
+  "timestamp_utc": "2026-01-07T15:55:33+00:00",
+  "git_commit": "002c645bbc15e3aceecf738449d682b03698ae44",
+  "row_count": 77,
+  "outputs": {
+    "kpis_csv": "outputs/demo_baseline/kpis.csv",
+    "plots_dir": "outputs/demo_baseline/plots",
+    "run_log": "outputs/demo_baseline/run.log"
+  },
+  "config_summary": {
+    "sim_time_mins": 480,
+    "max_dwell_mins": 240,
+    "post_process_buffer_mins": 120,
+    "flow_mix": {
+      "import": 0.6,
+      "export": 0.2,
+      "transship": 0.2
+    },
+    "resources": {
+      "cranes": 2,
+      "yard_capacity": 250,
+      "yard_equipment": 5,
+      "scanners": 1,
+      "loaders": 2,
+      "gate_in": 1,
+      "gate_out": 1
+    }
+  }
+}
