@@ -171,6 +171,21 @@ Running the CLI demo writes:
 - `outputs/demo_baseline/plots/`: at least two plots (total time + queue proxy)
 - `outputs/demo_baseline/run.log`: run summary and file paths
 
+## Agentic (Option A): Bottleneck diagnostics & recommendations
+
+Run:
+```bash
+python scripts/run_agentic_recommend.py --input outputs/web/baseline.json --out outputs/agentic_runs/demo_baseline
+```
+
+Outputs:
+- `outputs/agentic_runs/demo_baseline/diagnostics.json`
+- `outputs/agentic_runs/demo_baseline/decision.json`
+- `outputs/agentic_runs/demo_baseline/agentic_summary.md`
+
+If `outputs/web/baseline.json` is missing, point `--input` to a demo KPI file
+(e.g., `outputs/demo_baseline/kpis.csv`).
+
 ## Docs
 
 Reviewer-facing docs live under `docs/`:

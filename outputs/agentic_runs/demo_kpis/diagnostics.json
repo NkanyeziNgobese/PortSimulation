@@ -1,0 +1,67 @@
+{
+  "schema_version": "agentic_v1",
+  "input_source": "outputs\\demo_baseline\\kpis.csv",
+  "row_count": 77,
+  "missing_columns": [],
+  "summary_stats": {
+    "mean_total_time": 88.44850020996113,
+    "p95_total_time": 211.65184146726176
+  },
+  "context_stats": {
+    "scanner_queue_len_at_pickup": 0.4,
+    "loader_queue_len_at_pickup": 0.7428571428571429,
+    "occupancy_at_yard_to_scan": 0.14222222222222222,
+    "occupancy_at_yard_to_truck": 0.21090909090909093
+  },
+  "stage_rankings": [
+    {
+      "stage": "pre_pickup_wait",
+      "mean_wait": 54.79257235850054,
+      "contribution": 0.6194856015470319,
+      "notes": ""
+    },
+    {
+      "stage": "ready_to_pickup_wait",
+      "mean_wait": 103.55766504624091,
+      "contribution": 0.524240855067263,
+      "notes": ""
+    },
+    {
+      "stage": "loading_wait",
+      "mean_wait": 4.430759340384723,
+      "contribution": 0.05009422805210809,
+      "notes": ""
+    },
+    {
+      "stage": "scan_wait",
+      "mean_wait": 4.036367389324623,
+      "contribution": 0.02043333721941587,
+      "notes": ""
+    },
+    {
+      "stage": "yard_to_scan_wait",
+      "mean_wait": 0.0,
+      "contribution": 0.0,
+      "notes": ""
+    },
+    {
+      "stage": "yard_to_truck_wait",
+      "mean_wait": 0.0,
+      "contribution": 0.0,
+      "notes": ""
+    },
+    {
+      "stage": "gate_wait",
+      "mean_wait": 0.0,
+      "contribution": 0.0,
+      "notes": ""
+    },
+    {
+      "stage": "yard_equipment_wait",
+      "mean_wait": 0.0,
+      "contribution": 0.0,
+      "notes": ""
+    }
+  ],
+  "confidence": 1.0
+}

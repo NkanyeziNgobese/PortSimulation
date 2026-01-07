@@ -1,0 +1,65 @@
+{
+  "top_bottlenecks": [
+    {
+      "stage": "pre_pickup_wait",
+      "mean_wait": 3605.959684407223,
+      "contribution": 0.9851442625274165,
+      "notes": ""
+    },
+    {
+      "stage": "scan_wait",
+      "mean_wait": 3.860800777781265,
+      "contribution": 0.0008389788765512501,
+      "notes": ""
+    },
+    {
+      "stage": "gate_wait",
+      "mean_wait": 0.058737543058933,
+      "contribution": 1.2764076864718307e-05,
+      "notes": ""
+    }
+  ],
+  "recommended_actions": [
+    {
+      "stage": "scan_wait",
+      "parameter": "num_scanners",
+      "delta": 1,
+      "min_delta": 0,
+      "max_delta": 2,
+      "unit": "count",
+      "rationale": "Increase scanner capacity to reduce scan queue waits."
+    },
+    {
+      "stage": "gate_wait",
+      "parameter": "num_gate_out",
+      "delta": 1,
+      "min_delta": 0,
+      "max_delta": 2,
+      "unit": "count",
+      "rationale": "Increase gate-out capacity to reduce exit queue waits."
+    }
+  ],
+  "guardrails": {
+    "max_actions": 2,
+    "allowed_parameters": [
+      "num_scanners",
+      "num_loaders",
+      "yard_equipment_capacity",
+      "num_gate_in",
+      "num_gate_out",
+      "num_cranes"
+    ],
+    "forbidden_actions": [
+      "arrival rates",
+      "flow mix",
+      "dwell distributions",
+      "vessel layer toggles",
+      "data/profile rewrites"
+    ],
+    "claims_boundary": "simulation suggests; not operational advice"
+  },
+  "confidence": 1.0,
+  "notes": [
+    "No safe action mapped for stage: pre_pickup_wait."
+  ]
+}
