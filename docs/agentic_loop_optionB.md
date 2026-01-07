@@ -22,9 +22,21 @@ Option B runs a single, bounded intervention loop on the demo stack
 ## Claims boundary
 Use language like: "simulation suggests..." and avoid operational advice.
 
+## Output artifacts
+- `baseline/metadata.json`: baseline run metadata + config used.
+- `baseline/kpis.csv`: baseline KPI table (container-level metrics).
+- `decision.json`: bottleneck ranking and bounded recommendations.
+- `overrides.json`: applied overrides (if confidence is high enough).
+- `after/metadata.json`: after-run metadata + config used.
+- `after/kpis.csv`: after-run KPI table.
+- `comparison.json`: structured KPI deltas (mean/median/p90/p95).
+- `comparison.csv`: tabular version of KPI deltas.
+- `agentic_summary.md`: short narrative of bottleneck, actions, and deltas.
+
 ## Failure modes + recovery
 - Missing baseline outputs: stop and report missing `kpis.csv`.
 - Missing required KPIs: lower confidence; avoid auto-apply.
+- Low confidence (< 0.5): stop after decision and recommend re-running demo outputs.
 - Action bounds exceeded: abort apply and report the constraint.
 - Non-determinism: if the same seed produces inconsistent KPI outputs, flag as
   non-reproducible and stop.

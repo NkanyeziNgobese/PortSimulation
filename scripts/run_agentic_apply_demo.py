@@ -118,9 +118,15 @@ def run_agentic_demo(
     decision = recommend(diagnostics, max_actions=max_actions)
     _write_json(out_dir / "decision.json", decision)
 
+    summary_path = out_dir / "agentic_summary.md"
     if float(diagnostics.get("confidence", 0.0)) < 0.5:
         _build_summary(out_dir, diagnostics, decision, [], None)
-        return {"decision": decision, "applied": False}
+        return {
+            "decision": decision,
+            "applied": False,
+            "applied_actions": [],
+            "summary_path": summary_path,
+        }
 
     baseline_metadata = json.loads((baseline_dir / "metadata.json").read_text(encoding="utf-8"))
     baseline_config = baseline_metadata.get("config_used") or base_config
@@ -133,7 +139,12 @@ def run_agentic_demo(
 
     if not overrides:
         _build_summary(out_dir, diagnostics, decision, applied_actions, None)
-        return {"decision": decision, "applied": False}
+        return {
+            "decision": decision,
+            "applied": False,
+            "applied_actions": applied_actions,
+            "summary_path": summary_path,
+        }
 
     _write_json(out_dir / "overrides.json", overrides)
 
@@ -148,7 +159,13 @@ def run_agentic_demo(
     comparison_df.to_csv(out_dir / "comparison.csv", index=False)
 
     _build_summary(out_dir, diagnostics, decision, applied_actions, comparison)
-    return {"decision": decision, "applied": True, "comparison": comparison}
+    return {
+        "decision": decision,
+        "applied": True,
+        "comparison": comparison,
+        "applied_actions": applied_actions,
+        "summary_path": summary_path,
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -162,8 +179,20 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     out_dir = Path(args.out) if args.out else _default_out_dir(ROOT)
-    run_agentic_demo(out_dir=out_dir, seed=args.seed, max_actions=args.max_actions)
+    result = run_agentic_demo(out_dir=out_dir, seed=args.seed, max_actions=args.max_actions)
+    applied_actions = result.get("applied_actions") or []
+    summary_path = result.get("summary_path")
     print(f"Wrote agentic demo outputs to {out_dir}")
+    if applied_actions:
+        actions_text = "; ".join(
+            f"{item.get('param')} {item.get('baseline')}->{item.get('applied')}"
+            for item in applied_actions
+        )
+        print(f"Applied actions: {actions_text}")
+    else:
+        print("Applied actions: none")
+    if summary_path:
+        print(f"Agentic summary: {summary_path}")
     return 0
 
 

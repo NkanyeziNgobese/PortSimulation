@@ -4,12 +4,11 @@
 
 
 This repo models container congestion at the Port of Durban using a SimPy
-discrete-event simulation. The main notebook compares baseline operations
-against improved dwell strategies and can optionally run a vessel/berth layer
-with crane assignment (gang intensity).
-
-This is a student/analytical model only. It is not an official Transnet model
-and should not be treated as an endorsement or operational system.
+discrete-event simulation and includes a bounded agentic demo loop that
+diagnoses bottlenecks and applies safe capacity tweaks for comparison. The
+demo stack is deterministic, lightweight, and produces KPI deltas suitable for
+reviewers. This is a student/analytical model only and is not an official
+Transnet model.
 
 ## What this project contains
 
@@ -24,16 +23,44 @@ and should not be treated as an endorsement or operational system.
 ## Reviewer paths
 
 ### 5-minute path
-1. Run the CLI demo: `python scripts/run_simulation.py --scenario baseline --seed 123 --demo --out outputs/demo_baseline`
-2. Open `outputs/demo_baseline/metadata.json` and `outputs/demo_baseline/kpis.csv`.
-3. Review `docs/architecture.md` for system flow and module map.
+1. Install deps: `python -m pip install -r requirements.txt`
+2. Run the bounded agentic demo:
+   `python scripts/run_agentic_apply_demo.py --seed 123 --max-actions 2 --out outputs/agentic_demo`
+3. Open:
+   - `outputs/agentic_demo/agentic_summary.md`
+   - `outputs/agentic_demo/comparison.json`
+   - `outputs/agentic_demo/baseline/plots/total_time_hist.png`
+   - `outputs/agentic_demo/after/plots/total_time_hist.png`
+4. If you want a no-run snapshot, open `docs/agentic_examples/`.
 
 ### 30-minute path
-1. Run the CLI demo and inspect `outputs/demo_baseline/plots/`.
-2. Skim `durban_port_simulation.ipynb` sections: Introduction, Assumptions, Experiments, Results.
-3. Inspect `vessel_layer.py`, `truck_tas.py`, and `vessel_params.py` for model modules.
-4. Open the web dashboard (if exports exist) via
-   `python src/web_export/export_results_for_web.py` + `python -m http.server 8000`.
+1. Read `src/sim/model.py` and `src/sim/scenarios.py` for the demo simulation flow.
+2. Read `src/agent/` (diagnose/recommend/apply/compare) and `scripts/run_agentic_apply_demo.py`.
+3. Review docs: `docs/agentic_loop_optionB.md`, `docs/architecture.md`,
+   `docs/assumptions.md`, `docs/failure_modes.md`.
+4. Optional: explore the notebook and web dashboard for deeper context.
+
+## Agentic Option B (bounded)
+
+Loop: baseline -> diagnose -> bounded apply -> re-run -> compare.
+
+Guardrails:
+- Allowed params: `num_scanners`, `num_loaders`, `yard_equipment_capacity`,
+  `num_gate_in`, `num_gate_out`, `num_cranes`.
+- Bounds: +1 per action, max +2 total, one iteration only.
+- Forbidden changes: arrivals, flow mix, dwell distributions, vessel-layer toggles,
+  or any edits to `outputs/web` exports.
+
+Claims boundary: "simulation suggests... not operational advice."
+See `docs/agentic_loop_optionB.md` for full details and `docs/agentic_examples/`
+for curated artifacts.
+
+## Failure scenario + recovery
+
+- If required KPI columns are missing, data is empty, or confidence < 0.5, the
+  pipeline writes `decision.json` and stops without applying changes.
+- Recovery: re-run the demo, verify `kpis.csv` exists, and inspect
+  `outputs/agentic_demo/agentic_summary.md` for diagnostics.
 
 ## Quick demo (no Jupyter)
 
@@ -208,6 +235,9 @@ Outputs:
 ## Docs
 
 Reviewer-facing docs live under `docs/`:
+- `docs/agentic_loop_optionB.md`
+- `docs/agentic_examples/`
+- `docs/submission_checklist.md`
 - `docs/architecture.md`
 - `docs/assumptions.md`
 - `docs/limitations.md`

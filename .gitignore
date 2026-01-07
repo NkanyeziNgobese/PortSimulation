@@ -5,3 +5,23 @@ data/reports/
 unit_volume_long.csv
 unit_volume_wide.csv
 unit_volume_ingested.csv
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Outputs (generated)
+outputs/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
