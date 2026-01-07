@@ -3,8 +3,8 @@
   "scenario_description": "Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.",
   "seed": 123,
   "demo": true,
-  "timestamp_utc": "2026-01-07T18:00:28+00:00",
-  "git_commit": "71e4e2747a5f74d74b8a8a40eb100640773d47d7",
+  "timestamp_utc": "2026-01-07T19:00:38+00:00",
+  "git_commit": "e217cdcdf65136c44735f840f274a8e8b5c2962c",
   "row_count": 77,
   "outputs": {
     "kpis_csv": "C:/Users/nkany/OneDrive/Desktop/Projects/Port Congestion and Efficiency Optimization - Durban Port/PortSimulation/outputs/test_demo_baseline/kpis.csv",

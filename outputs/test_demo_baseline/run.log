@@ -1,8 +1,8 @@
-2026-01-07 20:00:28,265 INFO Starting demo run: scenario=baseline seed=123
-2026-01-07 20:00:28,266 INFO Demo description: Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.
-2026-01-07 20:00:28,281 INFO Completed simulation with 77 container rows.
-2026-01-07 20:00:28,287 INFO Wrote KPIs to C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\kpis.csv
-2026-01-07 20:00:28,435 INFO Saved plot C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\plots\total_time_hist.png
-2026-01-07 20:00:28,550 INFO Saved plot C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\plots\scanner_queue_len_hist.png
-2026-01-07 20:00:28,659 INFO Wrote metadata to C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\metadata.json
-2026-01-07 20:00:28,659 INFO Demo run complete.
+2026-01-07 21:00:38,149 INFO Starting demo run: scenario=baseline seed=123
+2026-01-07 21:00:38,149 INFO Demo description: Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.
+2026-01-07 21:00:38,165 INFO Completed simulation with 77 container rows.
+2026-01-07 21:00:38,172 INFO Wrote KPIs to C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\kpis.csv
+2026-01-07 21:00:38,378 INFO Saved plot C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\plots\total_time_hist.png
+2026-01-07 21:00:38,507 INFO Saved plot C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\plots\scanner_queue_len_hist.png
+2026-01-07 21:00:38,657 INFO Wrote metadata to C:\Users\nkany\OneDrive\Desktop\Projects\Port Congestion and Efficiency Optimization - Durban Port\PortSimulation\outputs\test_demo_baseline\metadata.json
+2026-01-07 21:00:38,657 INFO Demo run complete.
