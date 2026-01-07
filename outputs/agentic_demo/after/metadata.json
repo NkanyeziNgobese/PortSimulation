@@ -3,8 +3,8 @@
   "scenario_description": "Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.",
   "seed": 123,
   "demo": true,
-  "timestamp_utc": "2026-01-07T18:00:42+00:00",
-  "git_commit": "71e4e2747a5f74d74b8a8a40eb100640773d47d7",
+  "timestamp_utc": "2026-01-07T18:33:11+00:00",
+  "git_commit": "88768d0518cefbf5078a83fe02b8134c73002f23",
   "row_count": 66,
   "outputs": {
     "kpis_csv": "outputs/agentic_demo/after/kpis.csv",

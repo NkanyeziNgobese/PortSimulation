@@ -33,6 +33,19 @@ Transnet model.
    - `outputs/agentic_demo/after/plots/total_time_hist.png`
 4. If you want a no-run snapshot, open `docs/agentic_examples/`.
 
+#### Screenshots (evidence)
+These screenshots are from a successful demo run and show the command,
+artifacts, and before/after comparison.
+
+- Terminal success run  
+  ![Terminal success run](docs/screenshots/terminal_success_run_screenshot.png)
+- Output artifacts proof  
+  ![Output artifacts proof](docs/screenshots/output_artifacts_proof_screenshot.png)
+- Before vs after plots  
+  ![Before vs after](docs/screenshots/before_and_after_plot_screenshot.png)
+- Agentic summary  
+  ![Agentic summary](docs/screenshots/agentic_summary_screenshot.png)
+
 ### 30-minute path
 1. Read `src/sim/model.py` and `src/sim/scenarios.py` for the demo simulation flow.
 2. Read `src/agent/` (diagnose/recommend/apply/compare) and `scripts/run_agentic_apply_demo.py`.
@@ -52,6 +65,8 @@ Guardrails:
   or any edits to `outputs/web` exports.
 
 Claims boundary: "simulation suggests... not operational advice."
+Screenshots in `docs/screenshots/` correspond to running
+`python scripts/run_agentic_apply_demo.py --seed 123 --max-actions 2 --out outputs/agentic_demo`.
 See `docs/agentic_loop_optionB.md` for full details and `docs/agentic_examples/`
 for curated artifacts.
 

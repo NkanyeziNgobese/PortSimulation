@@ -1,8 +1,8 @@
-2026-01-07 20:00:41,795 INFO Starting demo run: scenario=baseline seed=123
-2026-01-07 20:00:41,795 INFO Demo description: Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.
-2026-01-07 20:00:41,806 INFO Completed simulation with 66 container rows.
-2026-01-07 20:00:41,812 INFO Wrote KPIs to outputs\agentic_demo\after\kpis.csv
-2026-01-07 20:00:41,921 INFO Saved plot outputs\agentic_demo\after\plots\total_time_hist.png
-2026-01-07 20:00:42,036 INFO Saved plot outputs\agentic_demo\after\plots\scanner_queue_len_hist.png
-2026-01-07 20:00:42,143 INFO Wrote metadata to outputs\agentic_demo\after\metadata.json
-2026-01-07 20:00:42,143 INFO Demo run complete.
+2026-01-07 20:33:10,795 INFO Starting demo run: scenario=baseline seed=123
+2026-01-07 20:33:10,797 INFO Demo description: Demo baseline scenario with scaled timings and synthetic arrivals. This does not use external datasets.
+2026-01-07 20:33:10,820 INFO Completed simulation with 66 container rows.
+2026-01-07 20:33:10,832 INFO Wrote KPIs to outputs\agentic_demo\after\kpis.csv
+2026-01-07 20:33:11,003 INFO Saved plot outputs\agentic_demo\after\plots\total_time_hist.png
+2026-01-07 20:33:11,152 INFO Saved plot outputs\agentic_demo\after\plots\scanner_queue_len_hist.png
+2026-01-07 20:33:11,299 INFO Wrote metadata to outputs\agentic_demo\after\metadata.json
+2026-01-07 20:33:11,299 INFO Demo run complete.
