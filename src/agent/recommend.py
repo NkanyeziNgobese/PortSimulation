@@ -1,3 +1,13 @@
+# This module provides functionality to recommend safe actions based on diagnostics data.
+# How it works is:
+# 1. It analyzes the diagnostics to identify top bottlenecks.
+# 2. It maps these bottlenecks to predefined safe actions.
+# 3. It ensures that the recommended actions adhere to specified guardrails.
+
+
+
+
+
 from __future__ import annotations
 
 from typing import Dict, List, Optional
@@ -13,6 +23,25 @@ from .actions import (
 
 DEFAULT_CONFIDENCE_THRESHOLD = 0.5
 
+#------------------------------------------------------------------------------------------
+# Sorted bottlenecks function
+#------------------------------------------------------------------------------------------
+#
+# The following function sorts the stage rankings based on their contribution to delays.
+# It takes a list of stage rankings and returns a sorted list of bottlenecks.
+# An example of input would be:
+# [
+#     {"stage": "scan_wait", "mean_wait": 30.0, "contribution": 0.3, "notes": ""},
+#     {"stage": "loading_wait", "mean_wait": 20.0, "contribution": 0.2, "notes": ""},
+#     {"stage": "yard_to_scan_wait", "mean_wait": 50.0, "contribution": 0.5, "notes": ""},
+# ]
+# The output would be:
+# [
+#     {"stage": "yard_to_scan_wait", "mean_wait": 50.0, "contribution": 0.5, "notes": ""},
+#     {"stage": "scan_wait", "mean_wait": 30.0, "contribution": 0.3, "notes": ""},
+#     {"stage": "loading_wait", "mean_wait": 20.0, "contribution": 0.2, "notes": ""},
+# ]
+#------------------------------------------------------------------------------------------
 
 def _sorted_bottlenecks(stage_rankings: List[dict]) -> List[dict]:
     return sorted(

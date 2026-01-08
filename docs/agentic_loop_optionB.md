@@ -1,4 +1,4 @@
-# Agentic Loop (Option B Demo): Observe -> Diagnose -> Decide -> Apply -> Re-run -> Compare
+# Bounded Agentic Bottleneck Loop (Option B Demo): Observe -> Diagnose -> Decide -> Apply -> Re-run -> Compare
 
 Option B runs a single, bounded intervention loop on the demo stack
 (`src/sim` + `scripts/run_simulation.py`) and produces a before/after comparison.

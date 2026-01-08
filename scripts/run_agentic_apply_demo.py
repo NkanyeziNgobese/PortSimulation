@@ -17,20 +17,28 @@ from src.agent.diagnose import diagnose_kpis_path
 from src.agent.recommend import recommend
 from src.sim import get_scenario, scenario_to_dict
 
-
+#-----------------------------------------------------------------------------------------------------
+# Utility functions for the agentic demo with auto-apply.
+#-----------------------------------------------------------------------------------------------------
+#
+# The following function generates a default output directory path based on the current UTC timestamp.
+# It names the directory in the format "agentic_demo_YYYYMMDD_HHMMSS" under the "outputs" folder in the root directory.
+#-----------------------------------------------------------------------------------------------------
 def _default_out_dir(root: Path) -> Path:
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     return root / "outputs" / f"agentic_demo_{timestamp}"
 
-
+# This function loads key performance indicators (KPIs) from a CSV file located at the specified path.
 def _load_kpis(path: Path) -> pd.DataFrame:
     return pd.read_csv(path)
 
-
+# This function writes a dictionary payload to a JSON file at the specified path.
+# We use this for saving various outputs like decisions, overrides, and comparisons.
 def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-
+# This function formats a float value to two decimal places for display.
+# If the value is None, it returns "n/a".
 def _format_value(value: float | None) -> str:
     if value is None:
         return "n/a"
