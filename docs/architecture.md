@@ -117,5 +117,6 @@ flowchart LR
 ```
 
 Notes:
+
 - The CLI demo (`scripts/run_simulation.py`) uses the lightweight model in `src/sim/` and does not depend on large datasets.
 - The notebook retains the full exploratory workflow and produces the richer plots under `figures/`.
