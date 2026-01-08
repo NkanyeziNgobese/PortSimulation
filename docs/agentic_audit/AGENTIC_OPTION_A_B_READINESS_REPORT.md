@@ -1,10 +1,12 @@
 # AGENTIC OPTION A/B READINESS REPORT
 
 ## 1) Executive Verdict
+
 - Option A readiness: Almost Ready
 - Option B readiness: Not Ready
 
 5 key blockers for A:
+
 - Bottleneck signals are only available via notebook-driven exports (see `src/web_export/export_results_for_web.py`), not a stable API.
 - No resource utilization metrics are recorded; only waits and point-in-time queue lengths are available.
 - The dashboard stage list includes customs/rebook metrics, but those columns are missing from `outputs/web/*.json`.
@@ -12,6 +14,7 @@
 - No agent-facing diagnostics or recommendation artifacts exist yet.
 
 5 key blockers for B:
+
 - No config override mechanism exists for the demo CLI; `src/sim/scenarios.py` hardcodes parameters and `improved` == `baseline`.
 - The notebook path has no explicit seeding (`rg` found no `random.seed` or `np.random.seed` in `durban_port_simulation.ipynb`).
 - The demo runner has no hook to apply parameter deltas; auto-apply would require new wiring.
@@ -19,6 +22,7 @@
 - Guardrails and allowed action bounds are not codified anywhere.
 
 Top 7 quick wins (lift):
+
 - Add a small config override layer for demo runs so actions can be applied without code edits. (M)
 - Emit a stable agentic diagnostics JSON (stage contributions, ranking, recommendations). (S)
 - Add schema/version metadata to outputs for programmatic stability. (S)
@@ -28,6 +32,7 @@ Top 7 quick wins (lift):
 - Add a simple compare artifact (baseline vs after KPI deltas) for Option B. (S)
 
 ## 2) What We Can Measure Today (Evidence)
+
 | Signal | File/path | Data format | Stable for programmatic use? |
 | --- | --- | --- | --- |
 | Container-level timestamps + KPIs (e.g., `total_time`, `yard_dwell`, `scan_wait`) | `outputs/web/baseline.json`, `outputs/web/improved.json` | JSON with `columns` list (47 cols) and `records` list of dicts | Medium (notebook-driven export, no schema version) |
@@ -40,12 +45,15 @@ Top 7 quick wins (lift):
 | CLI demo KPIs | `scripts/run_simulation.py` output `kpis.csv` | CSV with same columns as `metrics_to_dataframe` | Medium (demo only) |
 
 ## 3) Can We Diagnose Bottlenecks Reliably?
+
 Columns to compute a bottleneck score today:
+
 - Denominator: `total_time` (mean or p95).
 - Stage numerators: `scan_wait`, `yard_to_scan_wait`, `yard_to_truck_wait`, `loading_wait`, `gate_wait`, `pre_pickup_wait`, `ready_to_pickup_wait`, `yard_equipment_wait`.
 - Optional context: `scanner_queue_len_at_pickup`, `loader_queue_len_at_pickup`, `occupancy_at_yard_to_scan`, `occupancy_at_yard_to_truck`.
 
 Gaps that limit reliability:
+
 - No resource utilization metrics (crane/scanner/loader/gate busy time).
 - Queue lengths are only point-in-time snapshots, not time series.
 - Stage waits are flow-specific; some stages do not exist for exports or transshipments.
@@ -53,11 +61,13 @@ Gaps that limit reliability:
 - Schema is notebook-dependent and not versioned.
 
 Minimal additional instrumentation needed (plan only):
+
 - Track resource utilization per resource (busy time / total time) in `src/sim/model.py` and notebook flow.
 - Add queue length time series or aggregated queue stats (mean/max by stage).
 - Add a schema version field and a documented stage list in `outputs/web/metadata.json`.
 
 ## 4) Candidate Action Set (What Interventions Are Actually Supported)
+
 Actions below are verified in the demo stack (`src/sim`) unless noted.
 
 | Parameter | Defined in | Consumed in | Affects sim today? | Suggested safe bounds |
@@ -77,7 +87,9 @@ Actions below are verified in the demo stack (`src/sim`) unless noted.
 | `customs_*`, `rebook_*` | `durban_port_simulation.ipynb` | helper funcs present, not wired in main flow (per limitations) | No (for outputs/web) | Not suitable |
 
 ## 5) Option A Design Fit (Recommend-only)
+
 How Option A could work with current repo structures:
+
 - Inputs: `outputs/web/baseline.json` (records + columns). Alternative: `outputs/demo_baseline/kpis.csv` from CLI demo.
 - Run step: load records, compute stage contribution = mean(stage_wait) / mean(total_time).
 - Diagnosis: rank stages by contribution and cross-check queue length/occupancy fields.
@@ -85,11 +97,14 @@ How Option A could work with current repo structures:
 - Output location: `outputs/agentic_runs/<timestamp>/diagnostics.json` + `decision.json`.
 
 Assessment:
+
 - Recommendations can be generated without new simulation behavior.
 - Missing: stable schema versioning, utilization metrics, and a defined action mapping file.
 
 ## 6) Option B Design Fit (Recommend + Auto-apply + Re-run Once)
+
 How Option B would work:
+
 - Baseline run: `scripts/run_simulation.py --demo --seed <seed>`.
 - Diagnose: same as Option A.
 - Apply: override 1-2 safe parameters (resource counts or small time reductions).
@@ -97,11 +112,13 @@ How Option B would work:
 - Compare: compute KPI deltas (mean/median/p95 for `total_time`, `yard_dwell`, `scan_wait`, `loading_wait`, `gate_wait`).
 
 Assessment:
+
 - Deterministic seeding exists in the demo stack (`src/sim/model.py`), not in the notebook path.
 - No parameter override mechanism exists today, so auto-apply cannot happen without new wiring.
 - Outputs to compare exist (demo `kpis.csv`), but there is no built-in comparison artifact.
 
 ## 7) Guardrails & Governance (Must-have for Deloitte)
+
 - Allowed actions: resource counts (`num_scanners`, `num_loaders`, `yard_equipment_capacity`, `num_gate_in`, `num_gate_out`, `num_cranes`) and small time reductions (`scan_time_mins`, `loading_time_*`, `gate_*_time_*`).
 - Bounds: max +2 resources or -20% time change per action; max 2 actions per run.
 - Forbidden changes: arrival rates, flow mix, dwell distributions, vessel layer toggles, or data/profile rewrites.
@@ -110,6 +127,7 @@ Assessment:
 - Human-in-the-loop: Option B requires explicit confirmation before apply and re-run.
 
 ## 8) Failure Modes + Recovery Plan
+
 | Failure mode | Detection | Recovery behavior |
 | --- | --- | --- |
 | Missing baseline outputs | File not found for `outputs/web/baseline.json` or `kpis.csv` | Stop and report missing files; instruct to run export or demo |
@@ -122,6 +140,7 @@ Assessment:
 | Output directory not writable | Exception on write | Abort and surface error path |
 
 ## 9) Minimal Implementation Plan (No code, just steps)
+
 1) Add `src/agent/diagnose.py` to compute stage contributions from a dataframe or JSON records.
 2) Add `src/agent/actions.py` with an allowed action map and safe bounds.
 3) Add `configs/agent_params.json` for default bounds and stage-to-action mapping.
@@ -131,7 +150,9 @@ Assessment:
 7) Add docs: `docs/agentic_loop.md` describing guardrails and example outputs.
 
 ## 10) Appendix
+
 Key files inspected:
+
 - `durban_port_simulation.ipynb` (main model, parameters, metrics; no explicit seeding found)
 - `scripts/run_simulation.py` (demo CLI entrypoint)
 - `src/sim/model.py` (SimPy model, deterministic seeding for demo)
@@ -143,6 +164,7 @@ Key files inspected:
 - `README.md` (entrypoints and run guidance)
 
 Commands executed:
+
 - `Get-ChildItem -Force`
 - `Get-ChildItem -Force -Path docs\agentic_audit`
 - `rg --files -g '*.*' src`

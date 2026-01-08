@@ -4,6 +4,7 @@ Option B runs a single, bounded intervention loop on the demo stack
 (`src/sim` + `scripts/run_simulation.py`) and produces a before/after comparison.
 
 ## Steps
+
 1) Observe: run the demo baseline and collect `kpis.csv`.
 2) Diagnose: compute stage contribution shares from the KPI columns.
 3) Decide: select up to two safe actions based on the top bottlenecks.
@@ -12,6 +13,7 @@ Option B runs a single, bounded intervention loop on the demo stack
 6) Compare: compute mean/median/p90/p95 deltas for key KPIs.
 
 ## Guardrails
+
 - Allowed params only: `num_scanners`, `num_loaders`, `yard_equipment_capacity`,
   `num_gate_in`, `num_gate_out`, `num_cranes`.
 - Bounds: +1 per action, max +2 total, never below baseline.
@@ -20,9 +22,11 @@ Option B runs a single, bounded intervention loop on the demo stack
 - One iteration only: baseline -> apply -> re-run -> stop.
 
 ## Claims boundary
+
 Use language like: "simulation suggests..." and avoid operational advice.
 
 ## Output artifacts
+
 - `baseline/metadata.json`: baseline run metadata + config used.
 - `baseline/kpis.csv`: baseline KPI table (container-level metrics).
 - `decision.json`: bottleneck ranking and bounded recommendations.
@@ -34,6 +38,7 @@ Use language like: "simulation suggests..." and avoid operational advice.
 - `agentic_summary.md`: short narrative of bottleneck, actions, and deltas.
 
 ## Failure modes + recovery
+
 - Missing baseline outputs: stop and report missing `kpis.csv`.
 - Missing required KPIs: lower confidence; avoid auto-apply.
 - Low confidence (< 0.5): stop after decision and recommend re-running demo outputs.

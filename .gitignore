@@ -1,5 +1,6 @@
 # Big report exports
 data/reports/
+presentation_practice
 
 # Big CSVs (adjust paths if under /data)
 unit_volume_long.csv
