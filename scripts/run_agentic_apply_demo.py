@@ -34,17 +34,32 @@ def _load_kpis(path: Path) -> pd.DataFrame:
 
 # This function writes a dictionary payload to a JSON file at the specified path.
 # We use this for saving various outputs like decisions, overrides, and comparisons.
+# What is a payload here?
+# A payload is simply the data we want to write to the JSON file, represented as a Python dictionary.
+# For example, if we have a dictionary like {"key": "value"}, that would be our payload.
+# Example usage of the function:
+# Given: path = Path("output.json"), payload = {"key": "value"}
+# The function will create a file "output.json" with the content:
+# {
+#   "key": "value"
+# }
+
 def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 # This function formats a float value to two decimal places for display.
 # If the value is None, it returns "n/a".
+# Example usage:
+# _format_value(3.14159) returns "3.14"
+# _format_value(None) returns "n/a"
 def _format_value(value: float | None) -> str:
     if value is None:
         return "n/a"
     return f"{value:.2f}"
 
-
+# This function builds a summary markdown file for the agentic demo.
+# It includes diagnostics, decisions made, applied actions, and comparison metrics if available.
+# The summary is saved to "agentic_summary.md" in the specified output directory.
 def _build_summary(
     out_dir: Path,
     diagnostics: dict,
