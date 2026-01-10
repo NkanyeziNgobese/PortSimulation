@@ -1,3 +1,25 @@
+# ====================================================================================================
+# Fork Point: Diagnose stage (Option B agent loop)
+#
+# In the 6-stage "Bounded Agentic Bottleneck Loop", this module corresponds to:
+# - DIAGNOSE: take baseline evidence (KPIs) and turn it into a transparent bottleneck report.
+#
+# Inputs this module can handle:
+# - `kpis.csv` produced by the demo runner (`scripts/run_simulation.py`)
+# - A small exported web JSON payload (either a list of records, or {records/data, columns})
+#
+# Output (diagnostics dict) is intentionally simple and auditable:
+# - `stage_rankings`: per-stage mean wait + "contribution" score (see below)
+# - `summary_stats`: mean and p95 of `total_time` (tail matters for congestion)
+# - `missing_columns`: explicit report of what inputs were absent
+# - `confidence`: a downgrade when required columns are missing (or 0.0 when unusable)
+#
+# Governance / safety notes (why this is interview-friendly):
+# - `schema_version` is an explicit contract for downstream tools/tests.
+# - Missing-columns reporting makes it obvious when a recommendation is under-informed.
+# - Confidence is computed from coverage, so low-quality inputs lead to "no-apply" upstream.
+# ====================================================================================================
+
 from __future__ import annotations
 
 import json
@@ -7,7 +29,11 @@ from typing import Dict, Iterable, List, Optional
 import pandas as pd
 
 
+# `schema_version` is a stability contract: downstream steps can branch on it if the payload changes.
 SCHEMA_VERSION = "agentic_v1"
+
+# Candidate bottleneck stages: columns that represent "waiting time" at different parts of the process.
+# These are the columns we try to rank by contribution to `total_time`.
 STAGE_CANDIDATES = [
     "scan_wait",
     "yard_to_scan_wait",
@@ -18,6 +44,9 @@ STAGE_CANDIDATES = [
     "ready_to_pickup_wait",
     "yard_equipment_wait",
 ]
+
+# Optional context columns: extra evidence for explanation (queue snapshots / occupancy),
+# but not strictly required to compute bottleneck contributions.
 OPTIONAL_CONTEXT = [
     "scanner_queue_len_at_pickup",
     "loader_queue_len_at_pickup",
@@ -26,6 +55,14 @@ OPTIONAL_CONTEXT = [
 ]
 
 
+# ----------------------------------------------------------------------------------------------------
+# _safe_mean
+# Purpose (simple): Compute a mean while safely handling empty / all-NaN series.
+# Loop stage: Diagnose
+# Inputs: `series` (pandas Series)
+# Outputs: float mean, or None if unavailable
+# Interview explanation: "This keeps the diagnosis robust when a run produces sparse columns."
+# ----------------------------------------------------------------------------------------------------
 def _safe_mean(series: pd.Series) -> Optional[float]:
     if series.empty:
         return None
@@ -35,6 +72,14 @@ def _safe_mean(series: pd.Series) -> Optional[float]:
     return float(values.mean())
 
 
+# ----------------------------------------------------------------------------------------------------
+# _safe_p95
+# Purpose (simple): Compute the 95th percentile while safely handling empty / all-NaN series.
+# Loop stage: Diagnose
+# Inputs: `series` (pandas Series)
+# Outputs: float p95, or None if unavailable
+# Interview explanation: "We use p95 to capture the 'long tail' typical in congestion systems."
+# ----------------------------------------------------------------------------------------------------
 def _safe_p95(series: pd.Series) -> Optional[float]:
     if series.empty:
         return None
@@ -44,10 +89,26 @@ def _safe_p95(series: pd.Series) -> Optional[float]:
     return float(values.quantile(0.95))
 
 
+# ----------------------------------------------------------------------------------------------------
+# load_kpis_csv
+# Purpose (simple): Load the row-level KPI output table from the simulation runner.
+# Loop stage: Diagnose
+# Inputs: `input_path` to `kpis.csv`
+# Outputs: pandas DataFrame
+# Interview explanation: "This is the baseline evidence: one row per simulated container/entity."
+# ----------------------------------------------------------------------------------------------------
 def load_kpis_csv(input_path: Path) -> pd.DataFrame:
     return pd.read_csv(input_path)
 
 
+# ----------------------------------------------------------------------------------------------------
+# load_web_json
+# Purpose (simple): Load a lightweight web-export JSON payload into a DataFrame.
+# Loop stage: Diagnose
+# Inputs: JSON file path (either list[record] or {records/data, columns})
+# Outputs: pandas DataFrame (reindexed to `columns` if provided)
+# Interview explanation: "Same diagnosis logic can run on web exports without changing core code."
+# ----------------------------------------------------------------------------------------------------
 def load_web_json(input_path: Path) -> pd.DataFrame:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     records: List[dict] = []
@@ -64,6 +125,15 @@ def load_web_json(input_path: Path) -> pd.DataFrame:
         df = df.reindex(columns=columns)
     return df
 
+
+# ----------------------------------------------------------------------------------------------------
+# _coverage_ratio
+# Purpose (simple): Compute how many required columns are present (column coverage, not row coverage).
+# Loop stage: Diagnose
+# Inputs: DataFrame and iterable of required column names
+# Outputs: float in [0, 1]
+# Interview explanation: "This becomes the confidence score: missing required columns -> lower confidence."
+# ----------------------------------------------------------------------------------------------------
 def _coverage_ratio(df: pd.DataFrame, required_cols: Iterable[str]) -> float:
     required = list(required_cols)
     if not required:
@@ -72,13 +142,28 @@ def _coverage_ratio(df: pd.DataFrame, required_cols: Iterable[str]) -> float:
     return len(present) / len(required)
 
 
+# ----------------------------------------------------------------------------------------------------
+# _diagnose_dataframe
+# Purpose (simple): Build a transparent bottleneck report from a KPI DataFrame.
+# Loop stage: Diagnose
+# Inputs: `df` (KPIs), `input_source` (path label for provenance)
+# Outputs: diagnostics dict (schema_version, summary_stats, stage_rankings, missing_columns, confidence)
+# Interview explanation: "We compute mean waits per stage and rank them by contribution to total_time."
+# ----------------------------------------------------------------------------------------------------
 def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object]:
     row_count = int(len(df))
+
+    # Required vs optional columns:
+    # - required: `total_time` plus each candidate wait-stage column
+    # - optional: extra context that helps explain *why* a stage is a bottleneck
     required_cols = ["total_time"] + STAGE_CANDIDATES
     missing_required = [col for col in required_cols if col not in df.columns]
     missing_optional = [col for col in OPTIONAL_CONTEXT if col not in df.columns]
     missing_columns = sorted(set(missing_required + missing_optional))
 
+    # Summary stats on overall time-in-system:
+    # - mean_total_time is the average experience
+    # - p95_total_time surfaces tail latency (congestion tends to create long tails)
     mean_total = _safe_mean(df["total_time"]) if "total_time" in df.columns else None
     p95_total = _safe_p95(df["total_time"]) if "total_time" in df.columns else None
 
@@ -86,6 +171,9 @@ def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object
     for stage in STAGE_CANDIDATES:
         if stage not in df.columns:
             continue
+
+        # For each stage (e.g., scan_wait), compute its average wait and its share of total_time.
+        # "Contribution" is defined as: mean(stage_wait) / mean(total_time), using rows where both exist.
         notes: List[str] = []
         contribution = None
         stage_series = df[stage]
@@ -110,6 +198,9 @@ def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object
             }
         )
 
+    # Sorting behavior (stable expectations for the rest of the pipeline):
+    # - stages with unknown contribution (None) go last
+    # - otherwise sort by contribution descending (largest share of total_time first)
     stage_rankings.sort(
         key=lambda item: (
             item["contribution"] is None,
@@ -117,16 +208,21 @@ def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object
         )
     )
 
+    # Optional context stats: these are supporting evidence (queue length, yard occupancy), not required.
     context_stats: Dict[str, Optional[float]] = {}
     for col in OPTIONAL_CONTEXT:
         if col in df.columns:
             context_stats[col] = _safe_mean(df[col])
 
+    # Confidence logic:
+    # - unusable input (no rows or missing total_time) => 0.0
+    # - otherwise, confidence is the ratio of required columns present (rounded for readability)
     if row_count == 0 or "total_time" not in df.columns:
         confidence = 0.0
     else:
         confidence = round(_coverage_ratio(df, required_cols), 2)
 
+    # Return dict layout (kept stable for downstream steps and for demo auditability).
     return {
         "schema_version": SCHEMA_VERSION,
         "input_source": input_source,
@@ -142,16 +238,40 @@ def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object
     }
 
 
+# ----------------------------------------------------------------------------------------------------
+# diagnose_kpis_path
+# Purpose (simple): Diagnose a `kpis.csv` file path produced by the demo simulation runner.
+# Loop stage: Diagnose
+# Inputs: `input_path` (str or Path to a CSV)
+# Outputs: diagnostics dict
+# Interview explanation: "This is the exact entrypoint the orchestrator uses after the baseline run."
+# ----------------------------------------------------------------------------------------------------
 def diagnose_kpis_path(input_path: str | Path) -> Dict[str, object]:
     path = Path(input_path)
     df = load_kpis_csv(path)
     return _diagnose_dataframe(df, str(path))
 
 
+# ----------------------------------------------------------------------------------------------------
+# diagnose_dataframe
+# Purpose (simple): Diagnose an in-memory DataFrame (useful for notebooks/tests).
+# Loop stage: Diagnose
+# Inputs: `df`, optional `input_source` label
+# Outputs: diagnostics dict
+# Interview explanation: "Same logic, different input form; keeps the module easy to test."
+# ----------------------------------------------------------------------------------------------------
 def diagnose_dataframe(df: pd.DataFrame, input_source: str = "dataframe") -> Dict[str, object]:
     return _diagnose_dataframe(df, input_source)
 
 
+# ----------------------------------------------------------------------------------------------------
+# diagnose
+# Purpose (simple): Convenience wrapper that accepts a DataFrame, CSV path, or web JSON path.
+# Loop stage: Diagnose
+# Inputs: `input_value` (DataFrame or file path)
+# Outputs: diagnostics dict
+# Interview explanation: "This is a small adapter so callers don't need to care about file formats."
+# ----------------------------------------------------------------------------------------------------
 def diagnose(input_value: str | Path | pd.DataFrame) -> Dict[str, object]:
     if isinstance(input_value, pd.DataFrame):
         return _diagnose_dataframe(input_value, "dataframe")
@@ -163,3 +283,25 @@ def diagnose(input_value: str | Path | pd.DataFrame) -> Dict[str, object]:
         df = load_web_json(path)
         return _diagnose_dataframe(df, str(path))
     raise ValueError("Unsupported input format; use kpis.csv or web JSON.")
+
+
+# Interview "return to orchestrator" note:
+# - After this module returns a diagnostics dict, the Option B orchestrator calls `recommend(...)` to
+#   decide a bounded set of safe actions, then (optionally) applies overrides and re-runs.
+
+
+# ----------------------------------------------------------------------------------------------------
+# Closing notes (for interviews / demos)
+#
+# What this module proves:
+# - You can diagnose bottlenecks transparently from outputs (stage waits + simple contribution math),
+#   and you can surface data-quality confidence and missing-columns explicitly.
+#
+# Limitation (intentional for the demo):
+# - This is not a full utilization/time-series analysis; it uses per-container waits and a few snapshot
+#   columns (queue length, occupancy) when available.
+#
+# Why that's acceptable here:
+# - Option B is a bounded, audit-friendly demo loop: we want explainable heuristics that are fast,
+#   deterministic, and safe to gate (low confidence -> no apply).
+# ----------------------------------------------------------------------------------------------------
