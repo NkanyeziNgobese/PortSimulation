@@ -33,9 +33,11 @@
 # Teaching notes (3 ideas that make this demo credible in an interview):
 # - Seed + determinism:
 #   - A "seed" is a number that initializes the pseudo-random number generator (PRNG).
-#   - Determinism here means: same code + same inputs + same seed => same outputs.
+#   - Determinism here means: same code + same config + same seed => reproducible outputs.
 #   - We reuse the SAME seed for baseline and after so this is a fair A/B comparison where only the
 #     overrides change (not the random noise).
+#   - Nuance: same seed does NOT guarantee identical per-entity samples if overrides change event ordering
+#     and therefore change the order/number of RNG draws.
 # - Confidence:
 #   - In this demo, "confidence" means data completeness (schema/column coverage), NOT model accuracy.
 #   - Low confidence means we do not have enough evidence to recommend/apply changes.
@@ -212,9 +214,14 @@ def run_agentic_demo(
 
     # Observe: run the baseline simulation and write `baseline/kpis.csv`, `baseline/metadata.json`, logs, plots.
     #
-    # Teaching note (seed + determinism):
-    # - The simulation uses randomness (arrivals, dwell times, service times).
-    # - `seed` initializes the PRNG stream so the baseline run is reproducible.
+    # Teaching note (seed + determinism, with an important nuance):
+    # - The simulation uses pseudo-random sampling (arrivals, dwell times, service times).
+    # - `seed` initializes the pseudo-random number generator (PRNG).
+    # - Determinism here means: same code + same config + same seed => reproducible outputs.
+    # - We reuse the same seed for baseline and after to reduce random variation in the A/B comparison.
+    # - Nuance: same seed does NOT guarantee identical per-container samples if overrides change event ordering
+    #   and therefore change the order/number of RNG draws.
+    # Talk-track: "We fix the seed to control randomness and make before/after runs comparable."
     run_simulation.run_demo(base_config, seed=seed, out_dir=baseline_dir)
 
     # Diagnose: read the baseline KPIs and produce a diagnostics payload (incl. confidence + bottlenecks).
@@ -268,8 +275,10 @@ def run_agentic_demo(
 
     # Re-run: run the "after" simulation with the same seed and the updated configuration.
     #
-    # Teaching note (A/B comparability):
-    # - Reusing the SAME seed keeps the random draws aligned, so differences are driven by overrides.
+    # Teaching note (A/B comparability, nuance):
+    # - We reuse the same `seed` so baseline and after share a comparable randomness setup.
+    # - Nuance: capacity changes can change event ordering, which can change the order/number of RNG draws,
+    #   so per-container samples may not match exactly even with the same seed.
     config_after = dict(baseline_config)
     config_after.update(overrides)
     run_simulation.run_demo(config_after, seed=seed, out_dir=after_dir)

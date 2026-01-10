@@ -17,6 +17,9 @@ from .scenarios import ScenarioConfig
 # - We seed both Python's `random` and NumPy's RNG so a run can be reproduced end-to-end.
 # - In the Option B demo, using the same seed for baseline and after makes it a fair A/B comparison:
 #   differences are driven by config overrides, not random variation.
+# - Nuance: same seed does NOT guarantee identical per-entity samples across different configs.
+#   In event-driven simulations, capacity changes can change event ordering, which can change the order/number
+#   of RNG draws and therefore change the sampled times for specific entities.
 def set_seed(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
@@ -479,6 +482,7 @@ def truck_arrival_generator(
 
 def run_simulation(config: ScenarioConfig, seed: int) -> pd.DataFrame:
     # Reset RNG streams for this run (deterministic replay when code + inputs + seed are the same).
+    # Note: determinism is per (config, seed). If config changes event ordering, per-entity samples can diverge.
     set_seed(seed)
 
     metrics: List[dict] = []

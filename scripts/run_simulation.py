@@ -61,6 +61,9 @@ def parse_args() -> argparse.Namespace:
     # - A "seed" initializes the pseudo-random number generator (PRNG) so those "random" draws are repeatable.
     # - With the same code + same config + same seed, you get the same outputs (determinism).
     # - This is what makes baseline vs after a fair A/B comparison: only overrides change, not random noise.
+    # - Nuance: same seed does NOT guarantee identical per-entity samples if a different config consumes RNG draws
+    #   in a different order (for event-driven sims, capacity changes can change event ordering).
+    # - Even with that nuance, fixing the seed makes comparisons far fairer and lets reviewers reproduce each run.
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--demo", action="store_true", help="Run the lightweight demo simulation.")
     parser.add_argument("--out", required=True, help="Output directory path.")
@@ -174,12 +177,16 @@ def run_demo(config_dict: dict, seed: int, out_dir: Path) -> dict:
     logger.addHandler(handler)
     logger.addHandler(logging.StreamHandler(sys.stdout))
 
+    # Teaching note (provenance):
+    # - We log the seed and also write it to metadata.json so this exact run can be replayed by a reviewer.
     logger.info("Starting demo run: scenario=%s seed=%s", config.name, seed)
     logger.info("Demo description: %s", config.description)
 
     # Run the simulation core deterministically (same config + same seed => comparable KPIs).
     # If we changed the seed between baseline and after, differences could be random variation instead
     # of a true effect of the overrides.
+    # Nuance: even with the same seed, if overrides change event ordering, the order/number of RNG draws can change,
+    # so exact per-entity samples may diverge across baseline vs after.
     df = run_simulation(config, seed=seed)
     logger.info("Completed simulation with %s container rows.", len(df))
 
@@ -234,8 +241,9 @@ def run_demo(config_dict: dict, seed: int, out_dir: Path) -> dict:
     # - the full `config_used` dict for exact replay
     #
     # Teaching note:
-    # - Recording `seed` lets us replay the exact PRNG stream.
+    # - Recording `seed` lets us replay the exact PRNG stream for this specific config.
     # - Recording `git_commit` tells us exactly which code produced these KPIs.
+    # - For A/B comparisons, a fixed seed improves fairness even though per-entity samples may diverge if event ordering changes.
     metadata = {
         "scenario_name": config.name,
         "scenario_description": config.description,

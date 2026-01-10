@@ -12,6 +12,17 @@ Option B runs a single, bounded intervention loop on the demo stack
 5) Re-run: run the demo again with the same seed.
 6) Compare: compute mean/median/p90/p95 deltas for key KPIs.
 
+## Determinism and fairness
+
+- The simulation uses pseudo-random sampling (arrivals, dwell times, service times).
+- `seed` initializes the pseudo-random number generator (PRNG).
+- Determinism here means: same code + same config + same seed -> reproducible outputs.
+- We reuse the same seed for baseline and after to make the A/B comparison fair (reduce random variation).
+- Nuance: same seed does NOT guarantee identical per-entity samples if overrides change event ordering and
+  therefore change the order/number of RNG draws.
+- Talk track: "We fix the seed to control randomness and make before/after runs comparable; differences are
+  primarily attributable to the applied overrides rather than random noise."
+
 ## Guardrails
 
 - Allowed params only: `num_scanners`, `num_loaders`, `yard_equipment_capacity`,
