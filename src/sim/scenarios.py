@@ -116,7 +116,7 @@ class ScenarioConfig:
 
 
 # Stable list of scenario keys (kept in dataclass order) used for schema checks, metadata, and overrides.
-SCENARIO_KEYS = tuple(ScenarioConfig.__dataclass_fields__.keys())
+SCENARIO_KEYS = tuple(ScenarioConfig.__dataclass_fields__.keys())  # pylint: disable=no-member
 
 
 # ----------------------------------------------------------------------------------------------------
@@ -155,27 +155,44 @@ def scenario_from_dict(data: dict) -> ScenarioConfig:
 # small, deterministic, no-external-data scenario that still produces meaningful bottlenecks.
 # ----------------------------------------------------------------------------------------------------
 def _demo_base() -> ScenarioConfig:
+    # Baseline demo scenario ("source of truth" for CLI demo runs).
+    #
+    # Agent-adjustable knobs in the Option B loop (safe, bounded overrides):
+    # - num_cranes, num_scanners, num_loaders, yard_equipment_capacity, num_gate_in, num_gate_out
+    #
+    # Guardrails (kept fixed in this demo config):
+    # - demand/arrivals (truck/ship interarrival rates), flow mix (import/export/transship), dwell rules,
+    #   and data generation details. Those are intentionally not "agent knobs" in the interview demo.
     return ScenarioConfig(
+        # Identity + demo flag (primarily for metadata/logging).
         name="baseline",
         description=(
             "Demo baseline scenario with scaled timings and synthetic arrivals. "
             "This does not use external datasets."
         ),
         demo=True,
+
+        # Time horizon + dwell controls (how long we simulate + max time a container can stay in-system).
         sim_time_mins=8 * 60,
         max_dwell_mins=4 * 60,
         post_process_buffer_mins=2 * 60,
+
+        # Flow mix + container mix (guardrailed: not changed by the Option B agent).
         p_import=0.6,
         p_export=0.2,
         p_transship=0.2,
         pct_40ft=0.3,
-        num_cranes=2,
+
+        # Capacities/resources (the Option B agent can adjust the marked integer "resource knobs").
+        num_cranes=2,  # agent-adjustable
         yard_capacity=250,
-        yard_equipment_capacity=5,
-        num_scanners=1,
-        num_loaders=2,
-        num_gate_in=1,
-        num_gate_out=1,
+        yard_equipment_capacity=5,  # agent-adjustable
+        num_scanners=1,  # agent-adjustable
+        num_loaders=2,  # agent-adjustable
+        num_gate_in=1,  # agent-adjustable
+        num_gate_out=1,  # agent-adjustable
+
+        # Service rates / processing times (kept fixed for this bounded demo; influence queue service speed).
         crane_moves_per_hour=30.0,
         scan_time_mins=5.0,
         yard_move_min=2.0,
@@ -192,6 +209,8 @@ def _demo_base() -> ScenarioConfig:
         gate_out_time_min=0.5,
         gate_out_time_mode=1.0,
         gate_out_time_max=2.0,
+
+        # Dwell rules (guardrailed: treated as fixed distributions in the Option B demo).
         offset_after_discharge_mins=10.0,
         import_dwell_bands=[
             (10, 30, 0.35),
@@ -206,6 +225,8 @@ def _demo_base() -> ScenarioConfig:
         ],
         export_dwell_min=20.0,
         export_dwell_max=120.0,
+
+        # Arrivals / demand drivers (guardrailed: the Option B agent does not change arrival rates).
         ship_interarrival_mean_mins=6.0,
         export_interarrival_mean_mins=12.0,
         hourly_truck_teu_rate=[
