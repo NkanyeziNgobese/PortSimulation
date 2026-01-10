@@ -1,3 +1,36 @@
+# ====================================================================================================
+# Interview Walkthrough — Bounded Agentic Bottleneck Loop (Option B Demo)
+#
+# This script is the Option B "orchestrator": it wires together the simulation runner + a small agent
+# pipeline to do one bounded "recommend → apply → re-run → compare" pass.
+#
+# Loop stages (one pass):
+#   1) Observe  → run a baseline simulation and collect KPIs
+#   2) Diagnose → analyze KPIs to find the biggest time contributors (bottlenecks)
+#   3) Decide   → recommend a small, guardrailed set of actions
+#   4) Apply    → convert actions into concrete config overrides (still guardrailed)
+#   5) Re-run   → run the simulation again with the same seed + overrides
+#   6) Compare  → compute KPI deltas and write a human-readable summary
+#
+# Where this sits in the system:
+# - Orchestrates `scripts/run_simulation.py` (runs the sim and writes outputs)
+# - Uses `src/agent/*` for `diagnose_kpis_path`, `recommend`, `apply_actions`, `compare_kpis`
+# - The simulation core lives under `src/sim/*` and is called indirectly by the runner.
+#
+# Key artifacts under the output directory (`--out`):
+# - `decision.json` (diagnostics + agent decision + guardrails)
+# - `overrides.json` (applied config changes; only if we actually apply)
+# - `comparison.json`, `comparison.csv` (baseline vs after KPIs; only if re-run happens)
+# - `agentic_summary.md` (scroll-friendly demo summary)
+# - `baseline/` and `after/` runs with `metadata.json`, `kpis.csv`, plots, `run.log`, etc.
+#
+# Guardrails (intentional bounds for a demo):
+# - Bounded actions only (apply at most `--max-actions`, and keep deltas within guardrails)
+# - Deterministic comparison (baseline and after use the same seed)
+# - Single iteration (no repeated search / optimization loop)
+# - Low confidence (< 0.5) → no-apply (still writes decision + summary)
+# ====================================================================================================
+
 import argparse
 import json
 import sys
@@ -17,49 +50,61 @@ from src.agent.diagnose import diagnose_kpis_path
 from src.agent.recommend import recommend
 from src.sim import get_scenario, scenario_to_dict
 
-#-----------------------------------------------------------------------------------------------------
-# Utility functions for the agentic demo with auto-apply.
-#-----------------------------------------------------------------------------------------------------
-#
-# The following function generates a default output directory path based on the current UTC timestamp.
-# It names the directory in the format "agentic_demo_YYYYMMDD_HHMMSS" under the "outputs" folder in the root directory.
-#-----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+# _default_out_dir
+# Purpose (simple): Pick a timestamped output folder for this run.
+# Loop stage(s): Observe/Compare (logging + artifact organization)
+# Inputs: `root` (repo root Path)
+# Outputs: Path to `outputs/agentic_demo_YYYYMMDD_HHMMSS`
+# Why it matters: Keeps runs isolated, reproducible, and easy to inspect in a demo.
+# ----------------------------------------------------------------------------------------------------
 def _default_out_dir(root: Path) -> Path:
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     return root / "outputs" / f"agentic_demo_{timestamp}"
 
-# This function loads key performance indicators (KPIs) from a CSV file located at the specified path.
+# ----------------------------------------------------------------------------------------------------
+# _load_kpis
+# Purpose (simple): Load the KPI table produced by a simulation run.
+# Loop stage(s): Observe/Compare
+# Inputs: `path` to a `kpis.csv`
+# Outputs: `pandas.DataFrame` of KPIs
+# Why it matters: Standardizes how we read KPIs for diagnosis and comparisons.
+# ----------------------------------------------------------------------------------------------------
 def _load_kpis(path: Path) -> pd.DataFrame:
     return pd.read_csv(path)
 
-# This function writes a dictionary payload to a JSON file at the specified path.
-# We use this for saving various outputs like decisions, overrides, and comparisons.
-# What is a payload here?
-# A payload is simply the data we want to write to the JSON file, represented as a Python dictionary.
-# For example, if we have a dictionary like {"key": "value"}, that would be our payload.
-# Example usage of the function:
-# Given: path = Path("output.json"), payload = {"key": "value"}
-# The function will create a file "output.json" with the content:
-# {
-#   "key": "value"
-# }
-
+# ----------------------------------------------------------------------------------------------------
+# _write_json
+# Purpose (simple): Persist a small dictionary payload as pretty-printed JSON.
+# Loop stage(s): Decide/Apply/Compare (artifact writing)
+# Inputs: `path` (where to write), `payload` (what to write)
+# Outputs: None (writes a JSON file)
+# Why it matters: Makes the demo auditable — you can open the files and see what the agent decided.
+# ----------------------------------------------------------------------------------------------------
 def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-# This function formats a float value to two decimal places for display.
-# If the value is None, it returns "n/a".
-# Example usage:
-# _format_value(3.14159) returns "3.14"
-# _format_value(None) returns "n/a"
+# ----------------------------------------------------------------------------------------------------
+# _format_value
+# Purpose (simple): Format numeric values for the markdown summary.
+# Loop stage(s): Compare (reporting)
+# Inputs: `value` (float or None)
+# Outputs: 2-decimal string (or "n/a")
+# Why it matters: Keeps the summary readable and handles missing metrics gracefully.
+# ----------------------------------------------------------------------------------------------------
 def _format_value(value: float | None) -> str:
     if value is None:
         return "n/a"
     return f"{value:.2f}"
 
-# This function builds a summary markdown file for the agentic demo.
-# It includes diagnostics, decisions made, applied actions, and comparison metrics if available.
-# The summary is saved to "agentic_summary.md" in the specified output directory.
+# ----------------------------------------------------------------------------------------------------
+# _build_summary
+# Purpose (simple): Write a single markdown page summarizing diagnostics, decisions, and outcomes.
+# Loop stage(s): Compare (reporting)
+# Inputs: `out_dir`, `diagnostics`, `decision`, `applied_actions`, `comparison` (optional)
+# Outputs: None (writes `agentic_summary.md`)
+# Why it matters: In an interview/demo, this is the fastest artifact to skim end-to-end.
+# ----------------------------------------------------------------------------------------------------
 def _build_summary(
     out_dir: Path,
     diagnostics: dict,
@@ -120,7 +165,18 @@ def _build_summary(
     summary_path = out_dir / "agentic_summary.md"
     summary_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-
+# ----------------------------------------------------------------------------------------------------
+# run_agentic_demo
+# Purpose (simple): Orchestrate a single, bounded "baseline → diagnose → decide → apply → re-run → compare" loop.
+# Loop stage(s): Observe/Diagnose/Decide/Apply/Re-run/Compare
+# Inputs:
+# - `out_dir`: root folder for all artifacts (baseline/, after/, and JSON/CSV/MD summaries)
+# - `seed`: RNG seed reused across baseline and after runs (deterministic comparison)
+# - `max_actions`: cap on how many parameter changes we are allowed to apply
+# - `base_config`: optional explicit baseline config; otherwise load the repo's demo baseline scenario
+# Outputs: A result dict for the CLI (decision, whether we applied, applied_actions, and summary path)
+# Why it matters: This is the "Option B" demo loop in one place — a small, auditable, guardrailed agent workflow.
+# ----------------------------------------------------------------------------------------------------
 def run_agentic_demo(
     out_dir: Path,
     seed: int,
@@ -131,16 +187,22 @@ def run_agentic_demo(
     baseline_dir = out_dir / "baseline"
     after_dir = out_dir / "after"
 
+    # Observe: pick a baseline configuration (either provided explicitly, or the demo baseline scenario).
     if base_config is None:
         base_config = scenario_to_dict(get_scenario("baseline", demo=True))
 
+    # Observe: run the baseline simulation and write `baseline/kpis.csv`, `baseline/metadata.json`, logs, plots.
     run_simulation.run_demo(base_config, seed=seed, out_dir=baseline_dir)
 
+    # Diagnose: read the baseline KPIs and produce a diagnostics payload (incl. confidence + bottlenecks).
     kpis_path = baseline_dir / "kpis.csv"
     diagnostics = diagnose_kpis_path(kpis_path)
+
+    # Decide: turn diagnostics into a bounded recommendation set (and persist it for auditability).
     decision = recommend(diagnostics, max_actions=max_actions)
     _write_json(out_dir / "decision.json", decision)
 
+    # Confidence gate: if the diagnosis is weak, we stop here (still writing a summary for the demo).
     summary_path = out_dir / "agentic_summary.md"
     if float(diagnostics.get("confidence", 0.0)) < 0.5:
         _build_summary(out_dir, diagnostics, decision, [], None)
@@ -154,12 +216,15 @@ def run_agentic_demo(
     baseline_metadata = json.loads((baseline_dir / "metadata.json").read_text(encoding="utf-8"))
     baseline_config = baseline_metadata.get("config_used") or base_config
 
+    # Apply: convert recommendations into concrete config overrides (bounded by `max_actions` and guardrails).
     overrides, applied_actions = apply_actions(
         baseline_config,
         decision.get("recommended_actions", []),
         max_actions=max_actions,
     )
 
+
+    # Nothing to apply (or everything was blocked by guardrails) → write summary and stop.
     if not overrides:
         _build_summary(out_dir, diagnostics, decision, applied_actions, None)
         return {
@@ -169,18 +234,22 @@ def run_agentic_demo(
             "summary_path": summary_path,
         }
 
+    # Apply: persist the overrides so we can inspect exactly what changed.
     _write_json(out_dir / "overrides.json", overrides)
 
+    # Re-run: run the "after" simulation with the same seed and the updated configuration.
     config_after = dict(baseline_config)
     config_after.update(overrides)
     run_simulation.run_demo(config_after, seed=seed, out_dir=after_dir)
 
+    # Compare: load KPI tables, compute deltas, and write comparison artifacts (JSON + CSV).
     baseline_df = _load_kpis(baseline_dir / "kpis.csv")
     after_df = _load_kpis(after_dir / "kpis.csv")
     comparison, comparison_df = compare_kpis(baseline_df, after_df)
     _write_json(out_dir / "comparison.json", comparison)
     comparison_df.to_csv(out_dir / "comparison.csv", index=False)
 
+    # Compare/Report: generate a markdown summary that ties diagnostics → actions → outcomes together.
     _build_summary(out_dir, diagnostics, decision, applied_actions, comparison)
     return {
         "decision": decision,
@@ -190,7 +259,14 @@ def run_agentic_demo(
         "summary_path": summary_path,
     }
 
-
+# ----------------------------------------------------------------------------------------------------
+# parse_args
+# Purpose (simple): Define the CLI for the Option B demo.
+# Loop stage(s): Orchestration (not part of the simulation loop itself)
+# Inputs: Command-line args (`--seed`, `--max-actions`, `--out`)
+# Outputs: `argparse.Namespace`
+# Why it matters: Makes the demo repeatable with the same seed and bounded action budget.
+# ----------------------------------------------------------------------------------------------------
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run Option B agentic demo with auto-apply.")
     parser.add_argument("--seed", type=int, default=123)
@@ -199,6 +275,14 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# ----------------------------------------------------------------------------------------------------
+# main
+# Purpose (simple): CLI entrypoint that runs the demo and prints a short console summary.
+# Loop stage(s): Orchestration
+# Inputs: CLI args (via `parse_args`)
+# Outputs: Process exit code (0 on success)
+# Why it matters: One command produces a complete, interview-friendly artifact bundle under `--out`.
+# ----------------------------------------------------------------------------------------------------
 def main() -> int:
     args = parse_args()
     out_dir = Path(args.out) if args.out else _default_out_dir(ROOT)
@@ -219,5 +303,19 @@ def main() -> int:
     return 0
 
 
+# ----------------------------------------------------------------------------------------------------
+# Closing notes (for interviews / demos)
+#
+# What this script proves:
+# - A bounded, auditable agent loop can identify bottlenecks from KPIs, propose limited changes, apply them,
+#   and show before/after impact — all with artifacts you can inspect.
+#
+# What it intentionally does NOT do:
+# - It does not change demand/arrivals/flow mix, toggle vessel behavior, rewrite input data, or run an
+#   open-ended optimization search. It's one guardrailed iteration for a demo stack.
+#
+# One-line takeaway:
+# - "We run baseline → let the agent propose small config tweaks → re-run deterministically → quantify KPI deltas."
+# ----------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     raise SystemExit(main())
