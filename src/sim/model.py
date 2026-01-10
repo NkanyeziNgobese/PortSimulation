@@ -11,6 +11,12 @@ from .metrics import metrics_to_dataframe
 from .scenarios import ScenarioConfig
 
 
+# Teaching note (seed + determinism):
+# - The simulation uses randomness for arrivals and sampled times (dwell, service, routing choices).
+# - A seed initializes the pseudo-random number generator (PRNG), making those "random" draws repeatable.
+# - We seed both Python's `random` and NumPy's RNG so a run can be reproduced end-to-end.
+# - In the Option B demo, using the same seed for baseline and after makes it a fair A/B comparison:
+#   differences are driven by config overrides, not random variation.
 def set_seed(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
@@ -472,6 +478,7 @@ def truck_arrival_generator(
 
 
 def run_simulation(config: ScenarioConfig, seed: int) -> pd.DataFrame:
+    # Reset RNG streams for this run (deterministic replay when code + inputs + seed are the same).
     set_seed(seed)
 
     metrics: List[dict] = []

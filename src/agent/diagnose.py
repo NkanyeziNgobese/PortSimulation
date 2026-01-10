@@ -160,6 +160,9 @@ def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object
     missing_required = [col for col in required_cols if col not in df.columns]
     missing_optional = [col for col in OPTIONAL_CONTEXT if col not in df.columns]
     missing_columns = sorted(set(missing_required + missing_optional))
+    # Teaching note (governance):
+    # - We include `missing_columns` in the output so reviewers can see what evidence was available.
+    # - Missing required columns can degrade confidence (and upstream can choose "no-apply").
 
     # Summary stats on overall time-in-system:
     # - mean_total_time is the average experience
@@ -174,6 +177,12 @@ def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object
 
         # For each stage (e.g., scan_wait), compute its average wait and its share of total_time.
         # "Contribution" is defined as: mean(stage_wait) / mean(total_time), using rows where both exist.
+        #
+        # Teaching note:
+        # - contribution = mean(stage_wait) / mean(total_time)
+        # - This is a heuristic attribution (not causal proof). It helps prioritize which "knob" to try
+        #   first when we only allow a small number of actions.
+        # Example: mean total_time = 100 min and mean scan_wait = 30 min => contribution = 0.30 (30%).
         notes: List[str] = []
         contribution = None
         stage_series = df[stage]
@@ -215,8 +224,12 @@ def _diagnose_dataframe(df: pd.DataFrame, input_source: str) -> Dict[str, object
             context_stats[col] = _safe_mean(df[col])
 
     # Confidence logic:
-    # - unusable input (no rows or missing total_time) => 0.0
-    # - otherwise, confidence is the ratio of required columns present (rounded for readability)
+    # - In this demo, "confidence" is NOT predictive accuracy. It is a data completeness score.
+    # - It is computed as coverage_ratio(required_cols) rounded, where required_cols includes:
+    #   total_time + the stage wait columns.
+    # - Confidence is forced to 0.0 when the input is unusable (no rows, or missing total_time).
+    # - Missing stage columns degrades confidence because we cannot quantify some bottlenecks.
+    # Example: if total_time exists and 6 of 8 stage columns exist, confidence ~ (1+6)/(1+8) = 7/9 ~ 0.78.
     if row_count == 0 or "total_time" not in df.columns:
         confidence = 0.0
     else:

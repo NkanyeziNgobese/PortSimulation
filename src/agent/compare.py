@@ -42,6 +42,13 @@ COMPARE_METRICS = [
 # Inputs: `series` (pandas Series)
 # Outputs: dict with keys mean/median/p90/p95 (values may be None)
 # Interview explanation: "We summarize both central tendency and tail behavior for congestion."
+# Teaching note (percentiles in plain English):
+# - p90 is the value X where 90% of cases are <= X.
+# - p95 is the value X where 95% of cases are <= X (only the slowest 5% are above it).
+# - Mean can hide congestion pain because a small number of extreme delays create a long tail.
+# - We show mean (typical) AND p95 (tail) together.
+# Example: if 95% finish under 60 min but 5% take 180+ min, the mean might look acceptable while p95
+# makes the tail visible.
 # ----------------------------------------------------------------------------------------------------
 def _series_stats(series: pd.Series) -> Dict[str, float | None]:
     values = series.dropna()
@@ -73,6 +80,7 @@ def compare_kpis(
         base_stats = _series_stats(baseline_df[metric]) if metric in baseline_df.columns else {}
         after_stats = _series_stats(after_df[metric]) if metric in after_df.columns else {}
         # Delta calculations are guarded: we only subtract when both baseline and after values exist.
+        # (Missing columns or empty series produce None stats.)
         row = {
             "metric": metric,
             "baseline_mean": base_stats.get("mean"),

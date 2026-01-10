@@ -1,16 +1,16 @@
 # ====================================================================================================
-# Interview Walkthrough — Bounded Agentic Bottleneck Loop (Option B Demo)
+# Interview Walkthrough - Bounded Agentic Bottleneck Loop (Option B Demo)
 #
 # This script is the Option B "orchestrator": it wires together the simulation runner + a small agent
-# pipeline to do one bounded "recommend → apply → re-run → compare" pass.
+# pipeline to do one bounded "recommend -> apply -> re-run -> compare" pass.
 #
 # Loop stages (one pass):
-#   1) Observe  → run a baseline simulation and collect KPIs
-#   2) Diagnose → analyze KPIs to find the biggest time contributors (bottlenecks)
-#   3) Decide   → recommend a small, guardrailed set of actions
-#   4) Apply    → convert actions into concrete config overrides (still guardrailed)
-#   5) Re-run   → run the simulation again with the same seed + overrides
-#   6) Compare  → compute KPI deltas and write a human-readable summary
+#   1) Observe  -> run a baseline simulation and collect KPIs
+#   2) Diagnose -> analyze KPIs to find the biggest time contributors (bottlenecks)
+#   3) Decide   -> recommend a small, guardrailed set of actions
+#   4) Apply    -> convert actions into concrete config overrides (still guardrailed)
+#   5) Re-run   -> run the simulation again with the same seed + overrides
+#   6) Compare  -> compute KPI deltas and write a human-readable summary
 #
 # Where this sits in the system:
 # - Orchestrates `scripts/run_simulation.py` (runs the sim and writes outputs)
@@ -28,7 +28,20 @@
 # - Bounded actions only (apply at most `--max-actions`, and keep deltas within guardrails)
 # - Deterministic comparison (baseline and after use the same seed)
 # - Single iteration (no repeated search / optimization loop)
-# - Low confidence (< 0.5) → no-apply (still writes decision + summary)
+# - Low confidence (< 0.5) -> no-apply (still writes decision + summary)
+#
+# Teaching notes (3 ideas that make this demo credible in an interview):
+# - Seed + determinism:
+#   - A "seed" is a number that initializes the pseudo-random number generator (PRNG).
+#   - Determinism here means: same code + same inputs + same seed => same outputs.
+#   - We reuse the SAME seed for baseline and after so this is a fair A/B comparison where only the
+#     overrides change (not the random noise).
+# - Confidence:
+#   - In this demo, "confidence" means data completeness (schema/column coverage), NOT model accuracy.
+#   - Low confidence means we do not have enough evidence to recommend/apply changes.
+# - Tail metrics (p95):
+#   - Congestion creates long tails (a few cases get very delayed).
+#   - We report mean and p95 together to show both the typical case and the painful tail.
 # ====================================================================================================
 
 import argparse
@@ -79,7 +92,7 @@ def _load_kpis(path: Path) -> pd.DataFrame:
 # Loop stage(s): Decide/Apply/Compare (artifact writing)
 # Inputs: `path` (where to write), `payload` (what to write)
 # Outputs: None (writes a JSON file)
-# Why it matters: Makes the demo auditable — you can open the files and see what the agent decided.
+# Why it matters: Makes the demo auditable - you can open the files and see what the agent decided.
 # ----------------------------------------------------------------------------------------------------
 def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -147,6 +160,12 @@ def _build_summary(
         lines.append("- Applied actions: none")
 
     if comparison:
+        # Teaching note: tail metrics (p95) in plain English.
+        # - p95 ("95th percentile") is the value X where 95% of cases are <= X.
+        # - In congestion systems, averages can look OK while a small % suffer huge delays.
+        # - We show mean (typical) AND p95 (tail) together.
+        # Example: if 95% finish under 60 min but 5% take 180+ min, the mean can hide that pain,
+        # while p95 makes it visible.
         metrics = comparison.get("metrics", [])
         total_row = next((row for row in metrics if row.get("metric") == "total_time"), {})
         lines.append(
@@ -167,7 +186,7 @@ def _build_summary(
 
 # ----------------------------------------------------------------------------------------------------
 # run_agentic_demo
-# Purpose (simple): Orchestrate a single, bounded "baseline → diagnose → decide → apply → re-run → compare" loop.
+# Purpose (simple): Orchestrate a single, bounded "baseline -> diagnose -> decide -> apply -> re-run -> compare" loop.
 # Loop stage(s): Observe/Diagnose/Decide/Apply/Re-run/Compare
 # Inputs:
 # - `out_dir`: root folder for all artifacts (baseline/, after/, and JSON/CSV/MD summaries)
@@ -175,7 +194,7 @@ def _build_summary(
 # - `max_actions`: cap on how many parameter changes we are allowed to apply
 # - `base_config`: optional explicit baseline config; otherwise load the repo's demo baseline scenario
 # Outputs: A result dict for the CLI (decision, whether we applied, applied_actions, and summary path)
-# Why it matters: This is the "Option B" demo loop in one place — a small, auditable, guardrailed agent workflow.
+# Why it matters: This is the "Option B" demo loop in one place - a small, auditable, guardrailed agent workflow.
 # ----------------------------------------------------------------------------------------------------
 def run_agentic_demo(
     out_dir: Path,
@@ -192,6 +211,10 @@ def run_agentic_demo(
         base_config = scenario_to_dict(get_scenario("baseline", demo=True))
 
     # Observe: run the baseline simulation and write `baseline/kpis.csv`, `baseline/metadata.json`, logs, plots.
+    #
+    # Teaching note (seed + determinism):
+    # - The simulation uses randomness (arrivals, dwell times, service times).
+    # - `seed` initializes the PRNG stream so the baseline run is reproducible.
     run_simulation.run_demo(base_config, seed=seed, out_dir=baseline_dir)
 
     # Diagnose: read the baseline KPIs and produce a diagnostics payload (incl. confidence + bottlenecks).
@@ -202,7 +225,13 @@ def run_agentic_demo(
     decision = recommend(diagnostics, max_actions=max_actions)
     _write_json(out_dir / "decision.json", decision)
 
-    # Confidence gate: if the diagnosis is weak, we stop here (still writing a summary for the demo).
+    # Confidence gate (teaching note):
+    # - "confidence" here is NOT model accuracy. It is a data completeness score computed in Diagnose.
+    # - Roughly: confidence = coverage_ratio([total_time] + stage_wait_columns), rounded (see src/agent/diagnose.py).
+    # - Confidence is forced to 0.0 when the input is unusable (no rows, or missing total_time).
+    # - If KPI columns are missing (or there are zero rows), confidence is degraded.
+    # - We stop early to avoid recommending/applying changes from incomplete evidence.
+    # Example: if we have total_time + 6/8 stage wait columns, confidence ~ 0.78.
     summary_path = out_dir / "agentic_summary.md"
     if float(diagnostics.get("confidence", 0.0)) < 0.5:
         _build_summary(out_dir, diagnostics, decision, [], None)
@@ -224,7 +253,7 @@ def run_agentic_demo(
     )
 
 
-    # Nothing to apply (or everything was blocked by guardrails) → write summary and stop.
+    # Nothing to apply (or everything was blocked by guardrails) -> write summary and stop.
     if not overrides:
         _build_summary(out_dir, diagnostics, decision, applied_actions, None)
         return {
@@ -238,6 +267,9 @@ def run_agentic_demo(
     _write_json(out_dir / "overrides.json", overrides)
 
     # Re-run: run the "after" simulation with the same seed and the updated configuration.
+    #
+    # Teaching note (A/B comparability):
+    # - Reusing the SAME seed keeps the random draws aligned, so differences are driven by overrides.
     config_after = dict(baseline_config)
     config_after.update(overrides)
     run_simulation.run_demo(config_after, seed=seed, out_dir=after_dir)
@@ -249,7 +281,7 @@ def run_agentic_demo(
     _write_json(out_dir / "comparison.json", comparison)
     comparison_df.to_csv(out_dir / "comparison.csv", index=False)
 
-    # Compare/Report: generate a markdown summary that ties diagnostics → actions → outcomes together.
+    # Compare/Report: generate a markdown summary that ties diagnostics -> actions -> outcomes together.
     _build_summary(out_dir, diagnostics, decision, applied_actions, comparison)
     return {
         "decision": decision,
@@ -308,14 +340,14 @@ def main() -> int:
 #
 # What this script proves:
 # - A bounded, auditable agent loop can identify bottlenecks from KPIs, propose limited changes, apply them,
-#   and show before/after impact — all with artifacts you can inspect.
+#   and show before/after impact - all with artifacts you can inspect.
 #
 # What it intentionally does NOT do:
 # - It does not change demand/arrivals/flow mix, toggle vessel behavior, rewrite input data, or run an
 #   open-ended optimization search. It's one guardrailed iteration for a demo stack.
 #
 # One-line takeaway:
-# - "We run baseline → let the agent propose small config tweaks → re-run deterministically → quantify KPI deltas."
+# - "We run baseline -> let the agent propose small config tweaks -> re-run deterministically -> quantify KPI deltas."
 # ----------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     raise SystemExit(main())

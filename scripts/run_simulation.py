@@ -1,5 +1,5 @@
 # ====================================================================================================
-# Where this fits — Deterministic Demo Simulation Runner
+# Where this fits - Deterministic Demo Simulation Runner
 #
 # This script supports the Option B "Bounded Agentic Bottleneck Loop" in two places:
 # - OBSERVE: run a baseline simulation and write evidence (KPIs + logs + plots)
@@ -56,6 +56,11 @@ from src.sim import apply_overrides, get_scenario, run_simulation, scenario_from
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run a deterministic demo simulation.")
     parser.add_argument("--scenario", choices=["baseline", "improved"], required=True)
+    # Teaching note (seed + determinism):
+    # - Simulations use randomness (arrivals, service times, dwell times, routing choices).
+    # - A "seed" initializes the pseudo-random number generator (PRNG) so those "random" draws are repeatable.
+    # - With the same code + same config + same seed, you get the same outputs (determinism).
+    # - This is what makes baseline vs after a fair A/B comparison: only overrides change, not random noise.
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--demo", action="store_true", help="Run the lightweight demo simulation.")
     parser.add_argument("--out", required=True, help="Output directory path.")
@@ -122,7 +127,7 @@ def _load_json(path: Path) -> dict:
 # Loop stage(s): Observe / Re-run (shared config)
 # Inputs: parsed CLI args (may include `--config` and `--override`)
 # Outputs: dict config ready for `run_demo(...)`
-# Why it matters in the interview: Demonstrates the separation of concerns — configs are plain dicts
+# Why it matters in the interview: Demonstrates the separation of concerns - configs are plain dicts
 # that can be merged safely, while the simulation core consumes a typed `ScenarioConfig`.
 # ----------------------------------------------------------------------------------------------------
 def _build_config_dict(args: argparse.Namespace) -> dict:
@@ -173,6 +178,8 @@ def run_demo(config_dict: dict, seed: int, out_dir: Path) -> dict:
     logger.info("Demo description: %s", config.description)
 
     # Run the simulation core deterministically (same config + same seed => comparable KPIs).
+    # If we changed the seed between baseline and after, differences could be random variation instead
+    # of a true effect of the overrides.
     df = run_simulation(config, seed=seed)
     logger.info("Completed simulation with %s container rows.", len(df))
 
@@ -225,6 +232,10 @@ def run_demo(config_dict: dict, seed: int, out_dir: Path) -> dict:
     # - git_commit for provenance
     # - a small config summary for quick scanning
     # - the full `config_used` dict for exact replay
+    #
+    # Teaching note:
+    # - Recording `seed` lets us replay the exact PRNG stream.
+    # - Recording `git_commit` tells us exactly which code produced these KPIs.
     metadata = {
         "scenario_name": config.name,
         "scenario_description": config.description,

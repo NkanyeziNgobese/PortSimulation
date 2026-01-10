@@ -57,6 +57,10 @@
     return values.reduce((sum, v) => sum + v, 0) / values.length;
   };
 
+  // Teaching note (tail metrics, same idea as src/agent/compare.py):
+  // - percentile(values, 0.90) is p90: the value X where 90% of samples are <= X.
+  // - percentile(values, 0.95) is p95: the value X where 95% of samples are <= X.
+  // - Congestion creates long tails, so p90/p95 help reveal pain that the mean can hide.
   const percentile = (values, p) => {
     if (!values.length) return null;
     const sorted = [...values].sort((a, b) => a - b);
